@@ -78,7 +78,7 @@ class UsuariosController {
         usuarioEditar.nome,
         usuarioEditar.email,
         usuarioEditar.foto || null,
-        usuarioEditar.id,
+        usuarioEditar.id_usuario,
       ]);
 
       if (resultado.affectedRows === 0) {
@@ -86,7 +86,7 @@ class UsuariosController {
         return;
       }
 
-      resp.send({ id: usuarioEditar.id, ...usuarioEditar });
+      resp.send({ id_usuario: usuarioEditar.id_usuario, ...usuarioEditar });
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
       resp.status(500).send("Erro interno do servidor.");
@@ -96,9 +96,9 @@ class UsuariosController {
   // Exclui um usuário pelo ID
   async excluir(req, resp) {
     try {
-      const id = +req.params.id;
+      const id_usuario = +req.params.id;
 
-      if (!id) {
+      if (!id_usuario) {
         resp.status(400).send("ID do usuário é obrigatório.");
         return;
       }
