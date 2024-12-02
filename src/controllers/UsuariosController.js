@@ -15,7 +15,7 @@ class UsuariosController {
       const conexao = await new ConexaoMySql().getConexao();
 
       // Verifica se o email já está cadastrado
-      const comandoVerificaEmail = "SELECT id FROM usuarios WHERE email = ?";
+      const comandoVerificaEmail = "SELECT id_usuario FROM usuarios WHERE email = ?";
       const [usuarioExistente] = await conexao.execute(comandoVerificaEmail, [
         novoUsuario.email,
       ]);
@@ -37,7 +37,7 @@ class UsuariosController {
         senhaHashed,
       ]);
 
-      resp.status(201).send({ id: resultado.insertId, ...novoUsuario });
+      resp.status(201).send({ id_usuario: resultado.insertId, ...novoUsuario });
     } catch (error) {
       console.error("Erro ao adicionar usuário:", error);
       resp.status(500).send("Erro interno do servidor.");
@@ -50,7 +50,7 @@ class UsuariosController {
       const filtro = req.query.filtro || "";
       const conexao = await new ConexaoMySql().getConexao();
 
-      const comandoSql = "SELECT id, nome, email, foto FROM usuarios WHERE nome LIKE ?";
+      const comandoSql = "SELECT id_usuario, nome, email, foto FROM usuarios WHERE nome LIKE ?";
       const [resultado] = await conexao.execute(comandoSql, [`%${filtro}%`]);
 
       resp.send(resultado);
@@ -72,7 +72,7 @@ class UsuariosController {
 
       const conexao = await new ConexaoMySql().getConexao();
       const comandoSql =
-        "UPDATE usuarios SET nome = ?, email = ?, foto = ? WHERE id = ?";
+        "UPDATE usuarios SET nome = ?, email = ?, foto = ? WHERE id_usuario = ?";
 
       const [resultado] = await conexao.execute(comandoSql, [
         usuarioEditar.nome,
@@ -104,7 +104,7 @@ class UsuariosController {
       }
 
       const conexao = await new ConexaoMySql().getConexao();
-      const comandoSql = "DELETE FROM usuarios WHERE id = ?";
+      const comandoSql = "DELETE FROM usuarios WHERE id_usuario = ?";
 
       const [resultado] = await conexao.execute(comandoSql, [id]);
 
