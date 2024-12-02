@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import ConexaoMySql from "../database/ConexaoMySql.js";
 
 class UsuariosController {
@@ -26,7 +26,7 @@ class UsuariosController {
       }
 
       // Hash da senha com bcrypt
-      const senhaHashed = await bcrypt.hash(novoUsuario.senha, 10);
+      const senhaHashed = await bcryptjs.hash(novoUsuario.senha, 10);
 
       const comandoSql =
         "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";

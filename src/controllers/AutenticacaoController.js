@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import ConexaoMySql from "../database/ConexaoMySql.js";
 
 class AutenticacaoController {
@@ -25,7 +25,7 @@ class AutenticacaoController {
       }
 
       // Verifica a senha usando bcrypt
-      const senhaValida = await bcrypt.compare(senha, usuarioEncontrado.senha);
+      const senhaValida = await bcryptjs.compare(senha, usuarioEncontrado.senha);
       if (!senhaValida) {
         resp.status(401).send("Email ou Senha incorreta.");
         return;
