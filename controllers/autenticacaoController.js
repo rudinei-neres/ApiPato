@@ -49,3 +49,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro ao tentar realizar o login." });
   }
 });
+export default {
+    login,
+  };
