@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UsuarioServico = require('../servicos/usuarioServico');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const UsuarioControlador = {
   async login(req, res, next) {
