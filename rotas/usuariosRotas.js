@@ -1,13 +1,12 @@
-import express from 'express'; // Usando import para o express
-import UsuarioControlador from '../controladores/usuariosControlador.js'; // Usando import para o controlador
+import express from 'express';
+import UsuarioControlador from '../controladores/usuariosControlador.js'; // Certifique-se de que este caminho e a exportação estão corretos
 
 const router = express.Router();
 
+// Certifique-se de que as funções no controlador estão corretas
 router.post('/login', UsuarioControlador.login); // Rota para login
-router.get('/', UsuarioControlador.obterUsuario);
-router.put('/saldo', UsuarioControlador.atualizarSaldo);
-router.delete('/:id', UsuarioControlador.deletarUsuario);
+router.get('/', UsuarioControlador.obterUsuario); // Supondo que obterUsuario seja uma função definida no controlador
+router.put('/saldo', UsuarioControlador.atualizarSaldo); // Atualizar saldo
+router.delete('/:id', UsuarioControlador.deletarUsuario); // Deletar usuário
 
-export default router; // Usando export default para exportar o roteador
-
-
+export default router; // Exportando o router com export default
