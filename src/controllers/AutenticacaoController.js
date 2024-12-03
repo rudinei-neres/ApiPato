@@ -136,6 +136,21 @@ class ServicoUsuarios {
       throw new Error("Token inválido ou expirado.");
     }
   }
+  login = async (req, resp) => {
+    try {
+      const { email, senha } = req.body;
+
+      if (!email || !senha) {
+        return resp.status(400).json({ error: "Email e senha são obrigatórios." });
+      }
+
+      // Sua lógica de autenticação
+      resp.status(200).json({ message: "Login realizado com sucesso." });
+    } catch (error) {
+      console.error("Erro ao realizar login:", error.message);
+      resp.status(500).json({ error: "Erro interno do servidor." });
+    }
+  };
 }
 
 export default ServicoUsuarios;
