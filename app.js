@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import usuariosRoutes from './routes/usuarios.js';
+import autenticacaoController from './controllers/autenticacaoController.js';
 
 dotenv.config();
 
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use(cors());
 
 // Rotas de Usuários
+
+app.post("/login", autenticacaoController.login);
 app.use('/usuarios', usuariosRoutes);
 
 const PORT = process.env.PORT || 3000;
