@@ -1,124 +1,91 @@
-import bcryptjs from "bcryptjs";
 import ConexaoMySql from "../database/ConexaoMySql.js";
+import bcryptjs from "bcryptjs"; // Adicionada a importação de bcryptjs
 
 class UsuariosController {
-  // Adiciona um novo usuário com senha protegida por hashing
-  async adicionar(req, resp) {
-    try {
-      const novoUsuario = req.body;
-
-      if (!novoUsuario.nome || !novoUsuario.email || !novoUsuario.senha) {
-        resp.status(400).send("Os campos nome, email e senha são obrigatórios.");
-        return;
-      }
-
-      const conexao = await new ConexaoMySql().getConexao();
-
-      // Verifica se o email já está cadastrado
-      const comandoVerificaEmail = "SELECT id_usuario FROM usuarios WHERE email = ?";
-      const [usuarioExistente] = await conexao.execute(comandoVerificaEmail, [
-        novoUsuario.email,
-      ]);
-
-      if (usuarioExistente.length > 0) {
-        resp.status(400).send("Email já cadastrado.");
-        return;
-      }
-
-      // Hash da senha com bcrypt
-      const senhaHashed = await bcryptjs.hash(novoUsuario.senha, 10);
-
-      const comandoSql =
-        "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
-
-      const [resultado] = await conexao.execute(comandoSql, [
-        novoUsuario.nome,
-        novoUsuario.email,
-        senhaHashed,
-      ]);
-
-      resp.status(201).send({ id_usuario: resultado.insertId, ...novoUsuario });
-    } catch (error) {
-      console.error("Erro ao adicionar usuário:", error);
-      resp.status(500).send("Erro interno do servidor.");
-    }
-  }
-
-  // Lista todos os usuários com suporte a filtro
+  // Listar todos os usuários
   async listar(req, resp) {
     try {
-      const filtro = req.query.filtro || "";
       const conexao = await new ConexaoMySql().getConexao();
-
-      const comandoSql = "SELECT id_usuario, nome, email, foto FROM usuarios WHERE nome LIKE ?";
-      const [resultado] = await conexao.execute(comandoSql, [`%${filtro}%`]);
-
-      resp.send(resultado);
+      const [usuarios] = await conexao.execute("SELECT id_usuario, email, saldo FROM usuarios");
+      resp.status(200).json(usuarios);
     } catch (error) {
       console.error("Erro ao listar usuários:", error);
-      resp.status(500).send("Erro interno do servidor.");
+      resp.status(500).json({ error: "Erro ao listar usuários." });
     }
   }
 
-  // Atualiza informações de um usuário
+  // Adicionar um novo usuário
+  async adicionar(req, resp) {
+    try {
+      const { email, senha, saldo } = req.body;
+
+      if (!email || !senha) {
+        return resp.status(400).json({ error: "Email e senha são obrigatórios." });
+      }
+
+      const conexao = await new ConexaoMySql().getConexao();
+      const senhaHash = await bcryptjs.hash(senha, 10);
+      await conexao.execute(
+        "INSERT INTO usuarios (email, senha, saldo) VALUES (?, ?, ?)",
+        [email, senhaHash, saldo || 0]
+      );
+
+      resp.status(201).json({ message: "Usuário adicionado com sucesso." });
+    } catch (error) {
+      console.error("Erro ao adicionar usuário:", error);
+      resp.status(500).json({ error: "Erro ao adicionar usuário." });
+    }
+  }
+
+  // Atualizar informações de um usuário
   async atualizar(req, resp) {
     try {
-      const usuarioEditar = req.body;
+      const { id_usuario, email, saldo } = req.body;
 
-      if (!usuarioEditar.id_usuario || !usuarioEditar.nome || !usuarioEditar.email) {
-        resp.status(400).send("Os campos id, nome e email são obrigatórios.");
-        return;
+      if (!id_usuario) {
+        return resp.status(400).json({ error: "ID do usuário é obrigatório." });
       }
 
       const conexao = await new ConexaoMySql().getConexao();
-      const comandoSql =
-        "UPDATE usuarios SET nome = ?, email = ?, foto = ? WHERE id_usuario = ?";
-
-      const [resultado] = await conexao.execute(comandoSql, [
-        usuarioEditar.nome,
-        usuarioEditar.email,
-        usuarioEditar.foto || null,
-        usuarioEditar.id_usuario,
-      ]);
+      const [resultado] = await conexao.execute(
+        "UPDATE usuarios SET email = ?, saldo = ? WHERE id_usuario = ?",
+        [email, saldo, id_usuario]
+      );
 
       if (resultado.affectedRows === 0) {
-        resp.status(404).send("Usuário não encontrado.");
-        return;
+        return resp.status(404).json({ error: "Usuário não encontrado." });
       }
 
-      resp.send({ id_usuario: usuarioEditar.id_usuario, ...usuarioEditar });
+      resp.status(200).json({ message: "Usuário atualizado com sucesso." });
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
-      resp.status(500).send("Erro interno do servidor.");
+      resp.status(500).json({ error: "Erro ao atualizar usuário." });
     }
   }
 
-  // Exclui um usuário pelo ID
+  // Excluir um usuário
   async excluir(req, resp) {
     try {
-      const id_usuario = +req.params.id;
+      const { id_usuario } = req.params;
 
       if (!id_usuario) {
-        resp.status(400).send("ID do usuário é obrigatório.");
-        return;
+        return resp.status(400).json({ error: "ID do usuário é obrigatório." });
       }
 
       const conexao = await new ConexaoMySql().getConexao();
-      const comandoSql = "DELETE FROM usuarios WHERE id_usuario = ?";
-
-      const [resultado] = await conexao.execute(comandoSql, [id]);
+      const [resultado] = await conexao.execute("DELETE FROM usuarios WHERE id_usuario = ?", [id_usuario]);
 
       if (resultado.affectedRows === 0) {
-        resp.status(404).send("Usuário não encontrado.");
-        return;
+        return resp.status(404).json({ error: "Usuário não encontrado." });
       }
 
-      resp.send({ message: "Usuário excluído com sucesso." });
+      resp.status(200).json({ message: "Usuário excluído com sucesso." });
     } catch (error) {
       console.error("Erro ao excluir usuário:", error);
-      resp.status(500).send("Erro interno do servidor.");
+      resp.status(500).json({ error: "Erro ao excluir usuário." });
     }
   }
 }
 
 export default UsuariosController;
+
