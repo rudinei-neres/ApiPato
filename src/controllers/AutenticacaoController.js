@@ -36,7 +36,7 @@ class AutenticacaoController {
 
       // Gera um token JWT
       const token = jwt.sign(
-        { id: usuarioEncontrado.id, email: usuarioEncontrado.email, role: usuarioEncontrado.role },
+        { id_usuario: usuarioEncontrado.id_usuario, email: usuarioEncontrado.email, role: usuarioEncontrado.role },
         process.env.JWT_SECRET, // Chave secreta do JWT
         { expiresIn: "8h" } // Tempo de expiração do token
       );
