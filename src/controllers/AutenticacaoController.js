@@ -2,76 +2,141 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import ConexaoMySql from "../database/ConexaoMySql.js";
 
-class AutenticacaoController {
-  async login(req, resp) {
-    try {
-      const {email, senha} = req.body;
+class ServicoUsuarios {
+  constructor() {
+    this.conexao = new ConexaoMySql();
+  }
 
-      if (!email || !senha) {
-        return resp.status(400).json({ error: "Email e senha são obrigatórios." });
+  // Listar usuários
+  async listar(token) {
+    try {
+      const decoded = this.verificarToken(token);
+      if (decoded.papel !== "admin") {
+        throw new Error("Acesso negado.");
       }
 
-      const conexao = await new ConexaoMySql().getConexao();
+      const conexao = await this.conexao.getConexao();
+      const [usuarios] = await conexao.execute("SELECT id_usuario, email, papel FROM usuarios");
+      return usuarios;
+    } catch (error) {
+      console.error("Erro ao listar usuários:", error.message);
+      throw new Error("Erro ao listar usuários.");
+    }
+  }
+
+  // Cadastrar um novo usuário
+  async cadastrarUsuario(usuario, token) {
+    try {
+      const decoded = this.verificarToken(token);
+      if (decoded.papel !== "admin") {
+        throw new Error("Acesso negado.");
+      }
+
+      const conexao = await this.conexao.getConexao();
+      const senhaHash = await bcryptjs.hash(usuario.senha, 10);
+      await conexao.execute(
+        "INSERT INTO usuarios (email, senha, papel) VALUES (?, ?, ?)",
+        [usuario.email, senhaHash, usuario.papel || "usuario"]
+      );
+
+      return { message: "Usuário cadastrado com sucesso." };
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error.message);
+      throw new Error("Erro ao cadastrar o usuário.");
+    }
+  }
+
+  // Obter saldo de um usuário
+  async obterSaldoUsuario(email, token) {
+    try {
+      const decoded = this.verificarToken(token);
+
+      if (decoded.email !== email && decoded.papel !== "admin") {
+        throw new Error("Acesso negado.");
+      }
+
+      const conexao = await this.conexao.getConexao();
       const [resultado] = await conexao.execute(
-        "SELECT * FROM usuarios WHERE email = ?",
+        "SELECT saldo FROM usuarios WHERE email = ?",
         [email]
       );
 
-      const usuarioEncontrado = resultado[0];
-      if (!usuarioEncontrado) {
-        return resp.status(401).json({ error: "Email ou senha incorreta." });
+      if (!resultado.length) {
+        throw new Error("Usuário não encontrado.");
       }
 
-      if (process.env.NODE_ENV !== "production") {
-        console.log("Senha fornecida:", senha);
-        console.log("Hash armazenado no banco:", usuarioEncontrado.senha);
+      return { saldo: resultado[0].saldo };
+    } catch (error) {
+      console.error("Erro ao obter saldo:", error.message);
+      throw new Error("Erro ao obter saldo.");
+    }
+  }
+
+  // Atualizar saldo de um usuário
+  async atualizarSaldoUsuario(email, novoSaldo, token) {
+    try {
+      const decoded = this.verificarToken(token);
+
+      if (decoded.email !== email && decoded.papel !== "admin") {
+        throw new Error("Acesso negado.");
       }
 
-      const senhaValida = await bcryptjs.compare(senha, usuarioEncontrado.senha);
-      if (!senhaValida) {
-        return resp.status(401).json({ error: "Email ou senha incorreta." });
-      }
-
-      delete usuarioEncontrado.senha;
-
-      const token = jwt.sign(
-        { id_usuario: usuarioEncontrado.id_usuario, email: usuarioEncontrado.email, papel: usuarioEncontrado.papel },
-        process.env.JWT_SECRET,
-        { expiresIn: "8h" }
+      const conexao = await this.conexao.getConexao();
+      const [resultado] = await conexao.execute(
+        "UPDATE usuarios SET saldo = ? WHERE email = ?",
+        [novoSaldo, email]
       );
 
-      return resp.status(200).json({ usuario: usuarioEncontrado, token });
-    } catch (error) {
-      console.error("Erro ao realizar login:", error);
-      return resp.status(500).json({ error: "Erro interno do servidor." });
-    }
-  }
-
-  async verificarUsuario(req, resp) {
-    try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        return resp.status(401).json({ error: "Token de autenticação não fornecido." });
+      if (!resultado.affectedRows) {
+        throw new Error("Usuário não encontrado.");
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      return resp.status(200).json(decoded);
+      return { message: "Saldo atualizado com sucesso." };
     } catch (error) {
-      console.error("Erro ao verificar usuário:", error);
-      return resp.status(401).json({ error: "Token inválido ou expirado." });
+      console.error("Erro ao atualizar saldo:", error.message);
+      throw new Error("Erro ao atualizar saldo.");
     }
   }
 
-  async logout(req, resp) {
+  // Deletar um usuário
+  async deletarUsuario(email, token) {
     try {
-      // Logout em JWT é feito descartando o token no lado cliente
-      return resp.status(200).json({ message: "Logout realizado com sucesso." });
+      const decoded = this.verificarToken(token);
+
+      if (decoded.papel !== "admin") {
+        throw new Error("Acesso negado.");
+      }
+
+      const conexao = await this.conexao.getConexao();
+      const [resultado] = await conexao.execute(
+        "DELETE FROM usuarios WHERE email = ?",
+        [email]
+      );
+
+      if (!resultado.affectedRows) {
+        throw new Error("Usuário não encontrado.");
+      }
+
+      return { message: "Usuário deletado com sucesso." };
     } catch (error) {
-      console.error("Erro ao realizar logout:", error);
-      return resp.status(500).json({ error: "Erro interno do servidor." });
+      console.error("Erro ao deletar usuário:", error.message);
+      throw new Error("Erro ao deletar o usuário.");
+    }
+  }
+
+  // Verificar token JWT
+  verificarToken(token) {
+    if (!token) {
+      throw new Error("Token não fornecido.");
+    }
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      console.error("Erro ao verificar token:", error.message);
+      throw new Error("Token inválido ou expirado.");
     }
   }
 }
 
-export default AutenticacaoController;
+export default ServicoUsuarios;
 
