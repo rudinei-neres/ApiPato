@@ -5,7 +5,7 @@ import ConexaoMySql from "../database/ConexaoMySql.js";
 class AutenticacaoController {
   async login(req, resp) {
     try {
-      const { email, senha } = req.body;
+      const {email, senha} = req.body;
 
       if (!email || !senha) {
         return resp.status(400).json({ error: "Email e senha são obrigatórios." });
