@@ -1,4 +1,4 @@
-import db from '../utils/bancoDeDados'; // Usando import para importar o banco de dados
+import db from '../utils/bancoDeDados.js'; // Usando import para importar o banco de dados
 
 const Usuario = {
   async buscarPorEmail(email) {
