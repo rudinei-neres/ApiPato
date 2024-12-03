@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import ConexaoMySql from './database/conexaoMySql.js';
+import ConexaoMySql from '../database/conexaoMySql.js';
+
 
 // Rota de login do usuário
 app.post("/login", async (req, res) => {
