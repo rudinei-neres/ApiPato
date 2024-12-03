@@ -36,17 +36,28 @@ function authenticateToken(req, res, next) {
 // Registro de Usuário
 app.post("/usuarios", async (req, res) => {
   const { nome, email, senha, telefone, carteira } = req.body;
-  if (!nome || !email || !senha) return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+  
+  // Validação de campos obrigatórios
+  if (!nome || !email || !senha) {
+    return res.status(400).json({ error: "Nome, email e senha são obrigatórios." });
+  }
 
   try {
+    // Criação do hash da senha
     const hashedPassword = await bcrypt.hash(senha, 10);
     const connection = await getConnection();
+
+    // Inserção do usuário no banco de dados
     await connection.execute(
       "INSERT INTO usuarios (nome, email, senha, telefone, carteira) VALUES (?, ?, ?, ?, ?)",
       [nome, email, hashedPassword, telefone, carteira || 0]
     );
+
     res.status(201).json({ message: "Usuário registrado com sucesso." });
+
   } catch (error) {
+    console.error("Erro ao registrar usuário:", error); // Adicione esta linha para inspecionar o erro
+
     if (error.code === 'ER_DUP_ENTRY') {
       res.status(409).json({ error: "Este email já está cadastrado." });
     } else {
@@ -54,6 +65,7 @@ app.post("/usuarios", async (req, res) => {
     }
   }
 });
+
 
 // Login de Usuário
 app.post("/login", async (req, res) => {
