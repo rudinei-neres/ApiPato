@@ -3,86 +3,75 @@ import bcryptjs from "bcryptjs";
 import ConexaoMySql from "../database/ConexaoMySql.js";
 
 class AutenticacaoController {
-  // Realiza login e retorna um token JWT
   async login(req, resp) {
     try {
       const { email, senha } = req.body;
-  
+
       if (!email || !senha) {
-        resp.status(400).send("Email e Senha são obrigatórios.");
-        return;
+        return resp.status(400).json({ error: "Email e senha são obrigatórios." });
       }
-  
+
       const conexao = await new ConexaoMySql().getConexao();
-      const comandoSql = "SELECT * FROM usuarios WHERE email = ?";
-      const [resultado] = await conexao.execute(comandoSql, [email]);
-  
+      const [resultado] = await conexao.execute(
+        "SELECT * FROM usuarios WHERE email = ?",
+        [email]
+      );
+
       const usuarioEncontrado = resultado[0];
-  
       if (!usuarioEncontrado) {
-        resp.status(401).send("Email ou Senha incorreta.");
-        return;
+        return resp.status(401).json({ error: "Email ou senha incorreta." });
       }
-  
-      console.log("Senha fornecida:", senha);
-      console.log("Hash armazenado no banco:", usuarioEncontrado.senha);
-  
-      // Verifica a senha usando bcryptjs
+
+      if (process.env.NODE_ENV !== "production") {
+        console.log("Senha fornecida:", senha);
+        console.log("Hash armazenado no banco:", usuarioEncontrado.senha);
+      }
+
       const senhaValida = await bcryptjs.compare(senha, usuarioEncontrado.senha);
       if (!senhaValida) {
-        resp.status(401).send("Email ou Senha incorreta.");
-        return;
+        return resp.status(401).json({ error: "Email ou senha incorreta." });
       }
-  
-      // Remove a senha do objeto antes de retornar
+
       delete usuarioEncontrado.senha;
-  
-      // Gera um token JWT
+
       const token = jwt.sign(
         { id_usuario: usuarioEncontrado.id_usuario, email: usuarioEncontrado.email, role: usuarioEncontrado.role },
-        process.env.JWT_SECRET, // Chave secreta do JWT
-        { expiresIn: "8h" } // Tempo de expiração do token
+        process.env.JWT_SECRET,
+        { expiresIn: "8h" }
       );
-  
-      resp.send({ usuario: usuarioEncontrado, token });
+
+      return resp.status(200).json({ usuario: usuarioEncontrado, token });
     } catch (error) {
       console.error("Erro ao realizar login:", error);
-      resp.status(500).send("Erro interno do servidor.");
+      return resp.status(500).json({ error: "Erro interno do servidor." });
     }
   }
-   
 
-  // Verifica o usuário autenticado com base no token JWT
   async verificarUsuario(req, resp) {
     try {
       const token = req.headers.authorization?.split(" ")[1];
-
       if (!token) {
-        resp.status(401).send("Token de autenticação não fornecido.");
-        return;
+        return resp.status(401).json({ error: "Token de autenticação não fornecido." });
       }
 
-      // Verifica e decodifica o token JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      resp.send(decoded);
+      return resp.status(200).json(decoded);
     } catch (error) {
       console.error("Erro ao verificar usuário:", error);
-      resp.status(401).send("Token inválido ou expirado.");
+      return resp.status(401).json({ error: "Token inválido ou expirado." });
     }
   }
 
-  // Realiza logout invalidando o token (exemplo básico, pode ser ampliado com blacklists)
   async logout(req, resp) {
     try {
-      // Em JWT puro, logout é responsabilidade do cliente ao descartar o token.
-      // Blacklists de tokens podem ser implementadas se necessário.
-      resp.send("Logout realizado com sucesso.");
+      // Logout em JWT é feito descartando o token no lado cliente
+      return resp.status(200).json({ message: "Logout realizado com sucesso." });
     } catch (error) {
       console.error("Erro ao realizar logout:", error);
-      resp.status(500).send("Erro interno do servidor.");
+      return resp.status(500).json({ error: "Erro interno do servidor." });
     }
   }
 }
 
 export default AutenticacaoController;
+
