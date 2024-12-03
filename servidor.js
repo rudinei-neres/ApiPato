@@ -1,10 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const usuariosRotas = require('./rotas/usuariosRotas');
-const ofertasRotas = require('./rotas/ofertasRotas');
-const comprasRotas = require('./rotas/comprasRotas');
-const errorHandler = require('./middlewares/errorHandler');
-const autenticacaoMiddleware = require('./middlewares/autenticacaoMiddleware');
+import express from 'express'; // Importando express
+import cors from 'cors'; // Importando cors
+import usuariosRotas from './rotas/usuariosRotas.js'; // Importando as rotas de usuários
+import ofertasRotas from './rotas/ofertasRotas.js'; // Importando as rotas de ofertas
+import comprasRotas from './rotas/comprasRotas.js'; // Importando as rotas de compras
+import errorHandler from './middlewares/errorHandler.js'; // Importando o middleware de erro
+import autenticacaoMiddleware from './middlewares/autenticacaoMiddleware.js'; // Importando o middleware de autenticação
 
 const app = express();
 const PORTA = 5000;

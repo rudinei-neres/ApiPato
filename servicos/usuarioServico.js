@@ -1,4 +1,4 @@
-const Usuario = require('../modelos/usuarioModelo');
+import Usuario from '../modelos/usuarioModelo'; // Usando import para importar o modelo de usuário
 
 const UsuarioServico = {
   async obterUsuario(email) {
@@ -12,4 +12,4 @@ const UsuarioServico = {
   }
 };
 
-module.exports = UsuarioServico;
+export default UsuarioServico; // Usando export default para exportar o serviço

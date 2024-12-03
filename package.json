@@ -2,8 +2,9 @@
   "name": "Api-Pato",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "start": "servidor.js",
+    "start": "node servidor.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],

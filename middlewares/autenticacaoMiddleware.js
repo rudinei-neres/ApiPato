@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'; // Usando import para importar o jwt
 
 const autenticacaoMiddleware = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -17,4 +17,4 @@ const autenticacaoMiddleware = (req, res, next) => {
   });
 };
 
-module.exports = autenticacaoMiddleware;
+export default autenticacaoMiddleware; // Usando export default para exportar o middleware

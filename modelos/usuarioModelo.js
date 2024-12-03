@@ -1,4 +1,4 @@
-const db = require('../utils/bancoDeDados');
+import db from '../utils/bancoDeDados'; // Usando import para importar o banco de dados
 
 const Usuario = {
   async buscarPorEmail(email) {
@@ -13,4 +13,4 @@ const Usuario = {
   }
 };
 
-module.exports = Usuario;
+export default Usuario; // Usando export default para exportar o objeto Usuario
