@@ -35,7 +35,7 @@ class AutenticacaoController {
       delete usuarioEncontrado.senha;
 
       const token = jwt.sign(
-        { id_usuario: usuarioEncontrado.id_usuario, email: usuarioEncontrado.email, role: usuarioEncontrado.role },
+        { id_usuario: usuarioEncontrado.id_usuario, email: usuarioEncontrado.email, papel: usuarioEncontrado.papel },
         process.env.JWT_SECRET,
         { expiresIn: "8h" }
       );
