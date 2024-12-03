@@ -2,24 +2,26 @@
   "name": "Api-Pato",
   "version": "1.0.0",
   "main": "app.js",
-  "type": "module",
-  "scripts": {
+  "type": "module",  "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "API para o jogo do Pato",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.11.4"
+    "bcryptjs": "^2.4.3",                     // Para encriptar senhas de usuários
+    "cors": "^2.8.5",                         // Para permitir requisições de diferentes domínios (CORS)
+    "dotenv": "^16.4.5",                      // Para gerenciar variáveis de ambiente
+    "express": "^4.21.1",                     // Framework para Node.js
+    "jsonwebtoken": "^9.0.2",                 // JWT para autenticação
+    "mysql2": "^3.11.4",                      // Conexão com o banco de dados MySQL
+    "express-validator": "^7.0.0",            // Middleware para validação de dados de entrada
+    "helmet": "^6.0.1",                       // Segurança, adiciona headers HTTP
+    "morgan": "^1.10.0"                       // Logger de requisições HTTP
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7"                       // Para reiniciar o servidor automaticamente durante o desenvolvimento
   }
 }

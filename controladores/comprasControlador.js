@@ -1,5 +1,28 @@
-import ConexaoMySql from '../database/conexaoMySql.js';
+import ConexaoMySql from '../utils/bancoDeDados.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+export const buscarUsuarioLogado = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const connection = await new ConexaoMySql().getConexao();
+    const [resultado] = await connection.execute(
+      "SELECT nome, email, papel FROM usuarios WHERE id_usuario = ?",
+      [decoded.id_usuario]
+    );
+
+    if (!resultado.length) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    res.status(200).json(resultado[0]);
+  } catch (error) {
+    console.error("Erro ao buscar usuário logado:", error);
+    res.status(500).json({ error: "Erro ao buscar usuário logado" });
+  }
+};
 
 const adicionar = async (req, res) => {
   const { nome, email, senha, telefone, carteira } = req.body;
