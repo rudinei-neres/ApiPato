@@ -65,7 +65,7 @@ class UsuariosController {
     try {
       const usuarioEditar = req.body;
 
-      if (!usuarioEditar.id || !usuarioEditar.nome || !usuarioEditar.email) {
+      if (!usuarioEditar.id_usuario || !usuarioEditar.nome || !usuarioEditar.email) {
         resp.status(400).send("Os campos id, nome e email são obrigatórios.");
         return;
       }
