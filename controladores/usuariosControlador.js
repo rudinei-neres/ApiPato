@@ -1,6 +1,6 @@
 // Importando bibliotecas e serviços necessários
 import jwt from "jsonwebtoken"; // Para gerar e verificar tokens JWT
-import UsuarioServico from "../servicos/usuarioServico"; // Serviço para manipulação de usuários
+import UsuarioServico from "../servicos/usuarioServico.js"; // Serviço para manipulação de usuários
 import bcrypt from "bcryptjs"; // Alterado para bcryptjs
 
 // Controlador de Usuário

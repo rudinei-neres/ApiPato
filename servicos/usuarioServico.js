@@ -1,4 +1,4 @@
-import Usuario from '../modelos/usuarioModelo'; // Usando import para importar o modelo de usuário
+import Usuario from '../modelos/usuarioModelo.js'; // Usando import para importar o modelo de usuário
 
 const UsuarioServico = {
   async obterUsuario(email) {

@@ -1,5 +1,5 @@
 import express from 'express'; // Usando import para o express
-import UsuarioControlador from '../controladores/usuariosControlador'; // Usando import para o controlador
+import UsuarioControlador from '../controladores/usuariosControlador.js'; // Usando import para o controlador
 
 const router = express.Router();
 
