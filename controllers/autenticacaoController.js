@@ -1,10 +1,8 @@
+import ConexaoMySql from '../database/conexaoMySql.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import ConexaoMySql from '../database/conexaoMySql.js';
 
-
-// Rota de login do usuário
-app.post("/login", async (req, res) => {
+export const login = async (req, res) => {
   const { email, senha } = req.body;
 
   if (!email || !senha) {
@@ -48,7 +46,4 @@ app.post("/login", async (req, res) => {
     console.error("Erro ao tentar realizar o login:", error);
     res.status(500).json({ error: "Erro ao tentar realizar o login." });
   }
-});
-export default {
-    login,
-  };
+};
