@@ -136,7 +136,7 @@ class ServicoUsuarios {
       throw new Error("Token inválido ou expirado.");
     }
   }
-  login = async (req, resp) => {
+  async login(req, resp) {
     try {
       const { email, senha } = req.body;
 
@@ -144,13 +144,36 @@ class ServicoUsuarios {
         return resp.status(400).json({ error: "Email e senha são obrigatórios." });
       }
 
-      // Sua lógica de autenticação
-      resp.status(200).json({ message: "Login realizado com sucesso." });
+      const conexao = await new ConexaoMySql().getConexao();
+      const [resultado] = await conexao.execute(
+        "SELECT * FROM usuarios WHERE email = ?",
+        [email]
+      );
+
+      const usuario = resultado[0];
+      if (!usuario) {
+        return resp.status(401).json({ error: "Email ou senha incorretos." });
+      }
+
+      const senhaValida = await bcryptjs.compare(senha, usuario.senha);
+      if (!senhaValida) {
+        return resp.status(401).json({ error: "Email ou senha incorretos." });
+      }
+
+      const token = jwt.sign(
+        { id_usuario: usuario.id_usuario, email: usuario.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "8h" }
+      );
+
+      delete usuario.senha;
+
+      resp.status(200).json({ usuario, token });
     } catch (error) {
       console.error("Erro ao realizar login:", error.message);
       resp.status(500).json({ error: "Erro interno do servidor." });
     }
-  };
+  }
 }
 
 export default ServicoUsuarios;
