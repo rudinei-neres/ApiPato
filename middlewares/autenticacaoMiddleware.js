@@ -15,6 +15,7 @@ const autenticacaoMiddleware = (req, res, next) => {
 
   // Verifica se a rota atual é pública
   if (rotasPublicas.includes(req.path)) {
+    console.log(`Acesso permitido: ${req.path}`);
     return next(); // Permite o acesso sem autenticação
   }
 
