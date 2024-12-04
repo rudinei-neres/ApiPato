@@ -21,7 +21,6 @@ app.use(express.json());
 
 // Rotas abertas (sem autenticação)
 app.use('/api/usuarios', usuariosRotas); // Exemplo de rota aberta para login
-app.use('/api/usuarios', usuariosRotas); // Certifique-se de que o caminho está correto
 
 
 // Middleware de autenticação
