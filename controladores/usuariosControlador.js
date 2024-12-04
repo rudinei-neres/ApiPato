@@ -1,10 +1,9 @@
 import UsuarioServico from '../servicos/usuarioServico.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; // Adicionando a importação do jsonwebtoken
 
 const UsuarioControlador = {
   async login(req, res, next) {
-
     try {
       const { email, senha } = req.body;
 
@@ -24,6 +23,7 @@ const UsuarioControlador = {
         return res.status(401).json({ mensagem: 'Credenciais inválidas.' });
       }
 
+      // Geração do token JWT
       const token = jwt.sign({ id: usuario.id_usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       res.status(200).json({ token, usuario });
@@ -31,10 +31,10 @@ const UsuarioControlador = {
       console.error('Erro ao realizar login:', erro.message);
       next(erro);
     }
-  
   },
+
   async obterUsuario(req, res, next) {
-    const email = req.query.email;  // Exemplo de como você pode buscar por email
+    const email = req.query.email;
     const usuario = await UsuarioServico.obterUsuario(email);
     if (usuario) {
       res.json(usuario);
@@ -57,45 +57,29 @@ const UsuarioControlador = {
     console.log('Dados recebidos no cadastro:', req.body);
     try {
       const { nome, email, telefone, senha } = req.body;
-  
-      // Verifica se todos os campos obrigatórios foram preenchidos
+
       if (!nome || !email || !telefone || !senha) {
         const erro = new Error('Todos os campos são obrigatórios.');
         erro.status = 400;
         throw erro;
       }
-  
-      // Verifica se o email já está em uso
+
       const usuarioExistente = await UsuarioServico.obterUsuario(email);
       if (usuarioExistente) {
         const erro = new Error('Email já cadastrado.');
         erro.status = 409;
         throw erro;
       }
-  
-      // Hash da senha para segurança
+
       const senhaHash = await bcrypt.hash(senha, 10);
-  
-      // Insere o novo usuário no banco de dados
+
       await UsuarioServico.criarUsuario({ nome, email, telefone, senha: senhaHash });
-  
+
       res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso!' });
     } catch (erro) {
-      next(erro); // Encaminha o erro para o middleware de erro
+      next(erro);
     }
-  },
-  catch (erro) {
-    console.error('Erro no cadastro:', erro.message);
-    next(erro);
   }
-
-
-
-
-
-
-
 };
 
 export default UsuarioControlador;
-
