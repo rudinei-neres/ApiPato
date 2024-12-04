@@ -15,8 +15,9 @@ app.use(cors({
 app.use(express.json());
 
 // Rotas abertas (sem autenticação)
-app.use('/api/usuarios/login', usuariosRotas); // Exemplo de rota aberta para login
-app.use('/api/usuarios/cadastro', usuariosRotas); // Exemplo de rota aberta para cadastro
+app.use('/api/usuarios', usuariosRotas); // Exemplo de rota aberta para login
+app.use('/api/usuarios', usuariosRotas); // Certifique-se de que o caminho está correto
+
 
 // Middleware de autenticação
 app.use(autenticacaoMiddleware); // Aplica o middleware de autenticação para todas as rotas abaixo
@@ -27,7 +28,10 @@ app.use((req, res, next) => {
   next();
 });
 
-
+app.use((req, res, next) => {
+  console.log(`Rota acessada: ${req.path}`);
+  next();
+});
 
 app.use(errorHandler);
 

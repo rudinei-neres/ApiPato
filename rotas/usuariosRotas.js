@@ -15,5 +15,5 @@ router.get('/', UsuarioControlador.obterUsuario); // Supondo que obterUsuario se
 router.put('/saldo', UsuarioControlador.atualizarSaldo); // Atualizar saldo
 router.delete('/:id', UsuarioControlador.deletarUsuario); // Deletar usuário
 
-
+console.log('Rotas de usuários registradas.');
 export default router; 
