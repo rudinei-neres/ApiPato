@@ -9,7 +9,14 @@ const UsuarioServico = {
   },
   async deletarUsuario(id) {
     return await Usuario.deletarUsuario(id);
+  },
+  async criarUsuario({ nome, email, telefone, senha }) {
+    const query = 'INSERT INTO usuarios (nome, email, telefone, senha) VALUES (?, ?, ?, ?)';
+    await db.query(query, [nome, email, telefone, senha]);
   }
+  
+
+
 };
 
 export default UsuarioServico; // Usando export default para exportar o serviço
