@@ -1,10 +1,10 @@
 import express from 'express';
-const router = express.Router();
+const ofertasRotas = express.Router();
+import OfertasControlador from '../controladores/ofertasControlador.js';
 
 // Defina suas rotas
-router.get('/', (req, res) => {
-  res.send('Lista de ofertas');
-});
+router.get('/', OfertasControlador.listarOfertas);
+router.get('/:id', OfertasControlador.obterOferta);
 
 // Exporte o router com export default
-export default router;
+export default ofertasRotas;

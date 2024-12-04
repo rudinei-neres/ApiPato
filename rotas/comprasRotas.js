@@ -1,10 +1,12 @@
 import express from 'express';
-import usuariosController from '../controladores/comprasControlador.js';
+import comprasControlador from '../controladores/comprasControlador';
 
-const router = express.Router();
+
+const comprasRotas = express.Router();
 
 // Endpoint para registrar usuários
-router.post('/', usuariosController.adicionar);
-router.get('/:id_usuario', comprasControlador.buscarCompras);
+router.get('/', comprasControlador.listarCompras);
+router.post('/', ComprasControlador.registrarCompra);
 
-export default router;
+
+export default comprasRotas;

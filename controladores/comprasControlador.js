@@ -4,8 +4,22 @@ import jwt from 'jsonwebtoken';
 
 export const buscarUsuarioLogado = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: "Token não fornecido." });
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ error: "Token inválido." });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(403).json({ error: "Token inválido ou expirado." });
+    }
 
     const connection = await new ConexaoMySql().getConexao();
     const [resultado] = await connection.execute(
@@ -32,8 +46,18 @@ export const adicionar = async (req, res) => {
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(senha, 10);
     const connection = await new ConexaoMySql().getConexao();
+
+    // Verifica se o email já existe
+    const [existente] = await connection.execute(
+      "SELECT COUNT(*) as total FROM usuarios WHERE email = ?",
+      [email]
+    );
+    if (existente[0].total > 0) {
+      return res.status(409).json({ error: "Este email já está cadastrado." });
+    }
+
+    const hashedPassword = await bcrypt.hash(senha, 10);
 
     await connection.execute(
       "INSERT INTO usuarios (nome, email, senha, telefone, carteira) VALUES (?, ?, ?, ?, ?)",
@@ -43,17 +67,16 @@ export const adicionar = async (req, res) => {
     res.status(201).json({ message: "Usuário registrado com sucesso." });
   } catch (error) {
     console.error("Erro ao registrar usuário:", error);
-
-    if (error.code === 'ER_DUP_ENTRY') {
-      res.status(409).json({ error: "Este email já está cadastrado." });
-    } else {
-      res.status(500).json({ error: "Erro ao registrar usuário." });
-    }
+    res.status(500).json({ error: "Erro ao registrar usuário." });
   }
 };
 
 export const buscarCompras = async (req, res) => {
   const { id_usuario } = req.params;
+
+  if (!id_usuario) {
+    return res.status(400).json({ error: "ID do usuário é obrigatório." });
+  }
 
   try {
     const connection = await new ConexaoMySql().getConexao();
@@ -62,13 +85,16 @@ export const buscarCompras = async (req, res) => {
       [id_usuario]
     );
 
+    if (compras.length === 0) {
+      return res.status(404).json({ message: "Nenhuma compra encontrada." });
+    }
+
     res.status(200).json(compras);
   } catch (error) {
     console.error("Erro ao buscar compras:", error);
     res.status(500).json({ error: "Erro ao buscar compras." });
   }
 };
-
 
 export default {
   buscarUsuarioLogado,

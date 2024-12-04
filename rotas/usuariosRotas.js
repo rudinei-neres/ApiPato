@@ -9,11 +9,9 @@ router.post('/login', UsuarioControlador.login);// Certifique-se de que as funç
 
 
 router.put('/atualizar', UsuarioControlador.atualizarUsuario);
+router.get('/perfil', UsuarioControlador.obterUsuario); // Ajuste conforme o método do controlador
 
 
-router.get('/', UsuarioControlador.obterUsuario); // Supondo que obterUsuario seja uma função definida no controlador
-router.put('/saldo', UsuarioControlador.atualizarSaldo); // Atualizar saldo
-router.delete('/:id', UsuarioControlador.deletarUsuario); // Deletar usuário
 
 console.log('Rotas de usuários registradas.');
 export default router; 
