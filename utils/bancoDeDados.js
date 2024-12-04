@@ -15,4 +15,4 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export default pool; // Exportando a conexão pool como default
+export default db; // Exportando a conexão pool como default
