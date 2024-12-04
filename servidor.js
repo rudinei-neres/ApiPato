@@ -17,10 +17,10 @@ app.use('/api/usuarios/cadastro', usuariosRotas); // Exemplo de rota aberta para
 // Middleware de autenticação
 app.use(autenticacaoMiddleware); // Aplica o middleware de autenticação para todas as rotas abaixo
 
-// Rotas protegidas (autenticadas)
-app.use('/api/usuarios', usuariosRotas);
 
-// Middleware de Tratamento de Erros
+
+
+
 app.use(errorHandler);
 
 app.listen(PORTA, () => {
