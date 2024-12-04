@@ -1,5 +1,7 @@
 import UsuarioServico from '../servicos/usuarioServico.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
 const UsuarioControlador = {
   async login(req, res, next) {
 
