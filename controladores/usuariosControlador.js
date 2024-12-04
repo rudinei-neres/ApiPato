@@ -25,6 +25,7 @@ const UsuarioControlador = {
   },
 
   async cadastrarUsuario(req, res, next) {
+    console.log('Dados recebidos no cadastro:', req.body);
     try {
       const { nome, email, telefone, senha } = req.body;
   
@@ -54,7 +55,10 @@ const UsuarioControlador = {
       next(erro); // Encaminha o erro para o middleware de erro
     }
   },
-
+  catch (erro) {
+    console.error('Erro no cadastro:', erro.message);
+    next(erro);
+  }
 
 
 

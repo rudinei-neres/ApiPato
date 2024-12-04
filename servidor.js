@@ -7,7 +7,11 @@ import autenticacaoMiddleware from './middlewares/autenticacaoMiddleware.js';
 const app = express();
 const PORTA = 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // Permite requisições de qualquer origem
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Rotas abertas (sem autenticação)
@@ -18,6 +22,10 @@ app.use('/api/usuarios/cadastro', usuariosRotas); // Exemplo de rota aberta para
 app.use(autenticacaoMiddleware); // Aplica o middleware de autenticação para todas as rotas abaixo
 
 
+app.use((req, res, next) => {
+  console.log(`Rota acessada: ${req.path}, Método: ${req.method}`);
+  next();
+});
 
 
 
