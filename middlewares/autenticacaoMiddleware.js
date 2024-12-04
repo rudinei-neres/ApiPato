@@ -1,8 +1,18 @@
-import jwt from 'jsonwebtoken'; // Usando import para importar o jwt
-
 const autenticacaoMiddleware = (req, res, next) => {
+  // Lista de rotas públicas que não requerem autenticação
+  const rotasPublicas = [
+    '/api/usuarios/cadastro',
+    '/api/usuarios/login'
+  ];
+
+  // Verifica se a rota atual é pública
+  if (rotasPublicas.includes(req.path)) {
+    return next(); // Permite o acesso sem autenticação
+  }
+
+  // Pega o token do cabeçalho Authorization
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Exemplo de token: "Bearer <token>"
+  const token = authHeader && authHeader.split(' ')[1]; // Exemplo: "Bearer <token>"
 
   if (!token) {
     return res.status(401).json({ mensagem: 'Acesso negado. Nenhum token fornecido.' });
@@ -12,9 +22,9 @@ const autenticacaoMiddleware = (req, res, next) => {
     if (err) {
       return res.status(403).json({ mensagem: 'Token inválido ou expirado.' });
     }
-    req.usuario = usuario; // Adiciona o usuário à requisição
+    req.usuario = usuario; // Armazena os dados do token no req
     next();
   });
 };
 
-export default autenticacaoMiddleware; // Usando export default para exportar o middleware
+export default autenticacaoMiddleware;
