@@ -4,6 +4,11 @@ import usuariosRotas from './rotas/usuariosRotas.js'; // Certifique-se de que es
 import errorHandler from './middlewares/errorHandler.js';
 import autenticacaoMiddleware from './middlewares/autenticacaoMiddleware.js';
 
+import dotenv from 'dotenv';
+
+dotenv.config(); // Carrega as variáveis de ambiente
+
+
 const app = express();
 const PORTA = 5000;
 

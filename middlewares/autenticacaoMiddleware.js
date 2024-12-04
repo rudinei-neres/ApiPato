@@ -1,5 +1,13 @@
+import jwt from 'jsonwebtoken';
+
+
+
+
+
+
 const autenticacaoMiddleware = (req, res, next) => {
-  // Lista de rotas públicas que não requerem autenticação
+  
+// Lista de rotas públicas que não requerem autenticação
   const rotasPublicas = [
     '/api/usuarios/cadastro',
     '/api/usuarios/login'
