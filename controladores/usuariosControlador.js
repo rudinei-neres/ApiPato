@@ -1,5 +1,5 @@
 import UsuarioServico from '../servicos/usuarioServico.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 const UsuarioControlador = {
   async login(req, res, next) {
     // Lógica para login
