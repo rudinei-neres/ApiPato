@@ -53,6 +53,17 @@ const UsuarioControlador = {
     res.status(200).json({ mensagem: 'Usuário deletado com sucesso' });
   },
 
+  async atualizarUsuario(req, res, next) {
+    const { id_usuario, nome, telefone } = req.body;
+    try {
+      await UsuarioServico.atualizarUsuario({ id_usuario, nome, telefone });
+      res.status(200).json({ mensagem: 'Usuário atualizado com sucesso!' });
+    } catch (erro) {
+      next(erro);
+    }
+  },
+
+
   async cadastrarUsuario(req, res, next) {
     console.log('Dados recebidos no cadastro:', req.body);
     try {

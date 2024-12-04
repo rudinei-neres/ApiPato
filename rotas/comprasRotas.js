@@ -5,5 +5,6 @@ const router = express.Router();
 
 // Endpoint para registrar usuários
 router.post('/', usuariosController.adicionar);
+router.get('/:id_usuario', comprasControlador.buscarCompras);
 
 export default router;

@@ -8,7 +8,7 @@ router.post('/cadastro', UsuarioControlador.cadastrarUsuario);
 router.post('/login', UsuarioControlador.login);// Certifique-se de que as funções no controlador estão corretas
 
 
-
+router.put('/atualizar', UsuarioControlador.atualizarUsuario);
 
 
 router.get('/', UsuarioControlador.obterUsuario); // Supondo que obterUsuario seja uma função definida no controlador
