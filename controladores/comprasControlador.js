@@ -2,6 +2,7 @@ import ConexaoMySql from '../utils/bancoDeDados.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// Buscar usuário logado
 export const buscarUsuarioLogado = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -18,7 +19,9 @@ export const buscarUsuarioLogado = async (req, res) => {
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-      return res.status(403).json({ error: "Token inválido ou expirado." });
+      return res.status(403).json({
+        error: err.name === 'TokenExpiredError' ? 'Token expirado.' : 'Token inválido.'
+      });
     }
 
     const connection = await new ConexaoMySql().getConexao();
@@ -28,6 +31,7 @@ export const buscarUsuarioLogado = async (req, res) => {
     );
 
     if (!resultado.length) {
+      console.warn(`Token válido, mas usuário ${decoded.id_usuario} não encontrado.`);
       return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
@@ -38,6 +42,7 @@ export const buscarUsuarioLogado = async (req, res) => {
   }
 };
 
+// Adicionar novo usuário
 export const adicionar = async (req, res) => {
   const { nome, email, senha, telefone, carteira } = req.body;
 
@@ -59,9 +64,12 @@ export const adicionar = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(senha, 10);
 
+    const telefoneFormatado = telefone || null;
+    const carteiraInicial = carteira || 0;
+
     await connection.execute(
       "INSERT INTO usuarios (nome, email, senha, telefone, carteira) VALUES (?, ?, ?, ?, ?)",
-      [nome, email, hashedPassword, telefone, carteira || 0]
+      [nome, email, hashedPassword, telefoneFormatado, carteiraInicial]
     );
 
     res.status(201).json({ message: "Usuário registrado com sucesso." });
@@ -71,6 +79,7 @@ export const adicionar = async (req, res) => {
   }
 };
 
+// Buscar compras de um usuário
 export const buscarCompras = async (req, res) => {
   const { id_usuario } = req.params;
 
@@ -86,7 +95,7 @@ export const buscarCompras = async (req, res) => {
     );
 
     if (compras.length === 0) {
-      return res.status(404).json({ message: "Nenhuma compra encontrada." });
+      return res.status(200).json([]); // Retorna lista vazia ao invés de 404
     }
 
     res.status(200).json(compras);
