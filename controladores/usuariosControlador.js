@@ -91,16 +91,18 @@ const UsuarioControlador = {
   },
 
  // Método para atualizar o saldo do usuário
+// Método para atualizar o saldo do usuário
 async atualizarSaldo(req, res, next) {
   try {
-    const { email, saldo } = req.body;
+    const { saldo } = req.body;
+    const { id } = req.usuario; // Obter o ID do usuário autenticado do middleware
 
-    // Verifique se o email e o saldo estão presentes
-    if (!email || typeof saldo === 'undefined') {
-      return res.status(400).json({ mensagem: 'Email e saldo são obrigatórios.' });
+    // Verifique se o saldo está presente
+    if (typeof saldo === 'undefined') {
+      return res.status(400).json({ mensagem: 'Saldo é obrigatório.' });
     }
 
-    await UsuarioServico.atualizarSaldo(email, saldo);
+    await UsuarioServico.atualizarSaldoPorId(id, saldo);
     res.status(200).json({ mensagem: 'Saldo atualizado com sucesso.' });
   } catch (erro) {
     console.error('Erro ao atualizar saldo:', erro.message);
@@ -109,17 +111,11 @@ async atualizarSaldo(req, res, next) {
 },
 
 // Método para obter o saldo inicial do usuário
-// Método para obter o saldo inicial do usuário
 async inicialSaldo(req, res, next) {
   try {
-    const { email } = req.query;
+    const { id } = req.usuario; // Obter o ID do usuário autenticado do middleware
 
-    // Verifique se o email está presente
-    if (!email) {
-      return res.status(400).json({ mensagem: 'Email é obrigatório.' });
-    }
-
-    const saldo = await UsuarioServico.obterSaldo(email);
+    const saldo = await UsuarioServico.obterSaldoPorId(id);
 
     if (saldo === null) {
       return res.status(404).json({ mensagem: 'Usuário não encontrado.' });

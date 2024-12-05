@@ -21,31 +21,24 @@ const UsuarioServico = {
   },
 
   // Atualiza o saldo do usuário
-  async atualizarSaldo(email, novoSaldo) {
-    if (!email || typeof novoSaldo === 'undefined') {
-      throw new Error("Os campos 'email' e 'novoSaldo' são obrigatórios e não podem ser 'undefined' ou 'null'.");
-    }
-  
-    await ConexaoMySql.execute(
-      "UPDATE usuarios SET carteira = ? WHERE email = ?",
-      [novoSaldo, email]
-    );
-  
-    return { mensagem: 'Saldo atualizado com sucesso.' };
-  },
-  
-  async obterSaldo(email) {
-    if (!email) {
-      throw new Error("O campo 'email' é obrigatório e não pode ser 'undefined' ou 'null'.");
-    }
-  
-    const [resultado] = await ConexaoMySql.execute(
-      "SELECT carteira FROM usuarios WHERE email = ?",
-      [email]
-    );
-  
-    return resultado[0] ? resultado[0].carteira : null;
-  },
+  // Método para atualizar o saldo do usuário pelo ID
+async atualizarSaldoPorId(id, novoSaldo) {
+  await ConexaoMySql.execute(
+    "UPDATE usuarios SET carteira = ? WHERE id_usuario = ?",
+    [novoSaldo, id]
+  );
+  return { mensagem: 'Saldo atualizado com sucesso.' };
+},
+
+// Método para obter o saldo do usuário pelo ID
+async obterSaldoPorId(id) {
+  const [result] = await ConexaoMySql.execute(
+    "SELECT carteira FROM usuarios WHERE id_usuario = ?",
+    [id]
+  );
+  return result.length ? result[0].carteira : null;
+},
+
   
   
 
