@@ -6,7 +6,7 @@ const comprasRotas = express.Router();
 
 // Endpoint para registrar usuários
 router.get('/', comprasControlador.listarCompras);
-router.post('/', ComprasControlador.registrarCompra);
+router.post('/', comprasControlador.registrarCompra);
 
 
 export default comprasRotas;
