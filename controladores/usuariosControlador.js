@@ -37,7 +37,11 @@ const UsuarioControlador = {
   // Método para buscar usuário logado
   async buscarUsuarioLogado(req, res) {
     try {
-      const { id } = req.usuario || {};
+      if (!req.usuario) {
+        console.warn('Token inválido ou não fornecido.');
+        return res.status(401).json({ mensagem: 'Token inválido ou não fornecido.' });
+      }
+      const { id } = req.usuario;
       if (!id) {
         console.warn('Token inválido ou não fornecido.');
         return res.status(401).json({ mensagem: 'Token inválido ou não fornecido.' });
@@ -121,6 +125,8 @@ const UsuarioControlador = {
 };
 
 export default UsuarioControlador;
+
+
 
 
 
