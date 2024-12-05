@@ -4,7 +4,7 @@ import mysql from 'mysql2/promise'; // Importando mysql2 com a interface de prom
 dotenv.config(); // Carrega variáveis de ambiente do arquivo .env
 
 // Criação da conexão com o pool de banco de dados
-const db = mysql.createPool({
+const ConexaoMySql = mysql.createPool({
   host: process.env.MYSQL_HOST , // Host do banco de dados
   port: process.env.MYSQL_PORT , // Porta do banco de dados
   user: process.env.MYSQL_USER , // Usuário do banco de dados
@@ -15,4 +15,4 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-export default db; // Exportando a conexão pool como default
+export default ConexaoMySql; // Exportando a conexão pool como default
