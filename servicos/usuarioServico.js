@@ -23,11 +23,20 @@ const UsuarioServico = {
   // Atualiza o saldo do usuário
   async atualizarSaldo(email, novoSaldo) {
     await ConexaoMySql.execute(
-      "UPDATE usuarios SET saldo = ? WHERE email = ?",
+      "UPDATE usuarios SET carteira = ? WHERE email = ?",
       [novoSaldo, email]
     );
     return { mensagem: 'Saldo atualizado com sucesso.' };
   },
+  
+  async obterSaldo(email) {
+    const [resultado] = await ConexaoMySql.execute(
+      "SELECT carteira FROM usuarios WHERE email = ?",
+      [email]
+    );
+    return resultado[0] ? resultado[0].carteira : null;
+  },
+  
 
   // Deleta um usuário pelo ID
   async deletarUsuario(id) {

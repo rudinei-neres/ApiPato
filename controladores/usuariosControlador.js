@@ -101,6 +101,18 @@ const UsuarioControlador = {
       next(erro);
     }
   },
+  async  inicialSaldo(req, res, next) {
+    try {
+      const { email, saldo } = req.body;
+      await UsuarioServico.inicialSaldo(email, saldo);
+      res.status(200).json({ mensagem: 'Saldo atualizado com sucesso' });
+    } catch (erro) {
+      console.error('Erro ao atualizar saldo:', erro.message);
+      next(erro);
+    }
+  },
+
+
 
   // Método para deletar um usuário
   async deletarUsuario(req, res, next) {
