@@ -1,26 +1,21 @@
 import ConexaoMySql from '../utils/bancoDeDados.js';
 
 const ComprasControlador = {
-  // Método para buscar compras de um usuário
+  // Método para buscar compras do usuário autenticado
   async buscarCompras(req, res) {
-    const { id_usuario } = req.params;
+    const { id } = req.usuario; // Obter o ID do usuário autenticado do middleware
 
-    if (!id_usuario) {
-      return res.status(400).json({ error: "ID do usuário é obrigatório." });
+    if (!id) {
+      return res.status(400).json({ error: "ID do usuário não encontrado na autenticação." });
     }
 
     try {
-      const connection = await new ConexaoMySql().getConexao();
-      const [compras] = await connection.execute(
-        "SELECT * FROM compras WHERE id_usuario = ?",
-        [id_usuario]
+      const [compras] = await ConexaoMySql.execute(
+        "SELECT * FROM compras WHERE usuario_id = ?",
+        [id]
       );
 
-      if (compras.length === 0) {
-        return res.status(200).json([]); // Retorna lista vazia ao invés de 404
-      }
-
-      res.status(200).json(compras);
+      res.status(200).json(compras.length ? compras : []); // Retorna lista vazia se não houver compras
     } catch (error) {
       console.error("Erro ao buscar compras:", error);
       res.status(500).json({ error: "Erro ao buscar compras." });
@@ -29,17 +24,17 @@ const ComprasControlador = {
 
   // Método para adicionar uma compra
   async adicionarCompras(req, res) {
-    const { usuario_id, oferta_id } = req.body;
+    const { oferta_id } = req.body;
+    const { id } = req.usuario; // Obter o ID do usuário autenticado do middleware
 
-    if (!usuario_id || !oferta_id) {
+    if (!id || !oferta_id) {
       return res.status(400).json({ error: "Os campos usuario_id e oferta_id são obrigatórios." });
     }
 
     try {
-      const connection = await new ConexaoMySql().getConexao();
-      await connection.execute(
+      await ConexaoMySql.execute(
         "INSERT INTO compras (usuario_id, oferta_id) VALUES (?, ?)",
-        [usuario_id, oferta_id]
+        [id, oferta_id]
       );
 
       res.status(201).json({ mensagem: "Compra adicionada com sucesso." });
@@ -50,6 +45,7 @@ const ComprasControlador = {
   }
 };
 
-export default ComprasControlador;
+// ----------------------------------------
 
+export default ComprasControlador;
 

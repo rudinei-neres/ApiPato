@@ -7,11 +7,10 @@ const comprasRotas = express.Router();
 // Aplicar o middleware de autenticação para todas as rotas de compras
 comprasRotas.use(autenticacaoMiddleware);
 
-// Endpoint para listar compras
+// Endpoint para listar compras do usuário autenticado
 comprasRotas.get('/', comprasControlador.buscarCompras);
 
 // Endpoint para registrar uma nova compra
 comprasRotas.post('/', comprasControlador.adicionarCompras);
 
 export default comprasRotas;
-
