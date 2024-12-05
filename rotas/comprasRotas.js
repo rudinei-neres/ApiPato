@@ -7,6 +7,6 @@ const comprasRotas = express.Router();
 comprasRotas.get('/', comprasControlador.buscarCompras);
 
 // Endpoint para registrar uma nova compra
-comprasRotas.post('/', comprasControlador.adicionar);
+comprasRotas.post('/', comprasControlador.adicionarCompras);
 
 export default comprasRotas;
