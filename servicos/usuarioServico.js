@@ -3,9 +3,30 @@ import db from '../utils/bancoDeDados.js'; // Certifique-se de que o caminho e o
 
 
 const UsuarioServico = {
+  
   async obterUsuario(email) {
     return await Usuario.buscarPorEmail(email);
   },
+  async obterUsuario(email) {
+    const connection = await new ConexaoMySql().getConexao();
+    const [usuario] = await connection.execute(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email]
+    );
+    return usuario[0] || null;
+  },
+
+  async obterUsuarioPorId(id) {
+    const connection = await new ConexaoMySql().getConexao();
+    const [usuario] = await connection.execute(
+      "SELECT * FROM usuarios WHERE id_usuario = ?",
+      [id]
+    );
+    return usuario[0] || null;
+  },
+  
+  
+  
   async atualizarSaldo(email, novoSaldo) {
     return await Usuario.atualizarSaldo(email, novoSaldo);
   },
