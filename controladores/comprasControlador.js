@@ -45,7 +45,5 @@ const ComprasControlador = {
   }
 };
 
-// ----------------------------------------
-
 export default ComprasControlador;
 

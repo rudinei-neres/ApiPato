@@ -1,3 +1,4 @@
+
 import express from 'express';
 import comprasControlador from '../controladores/comprasControlador.js';
 import autenticacaoMiddleware from '../middlewares/autenticacaoMiddleware.js'; // Certifique-se de que o caminho está correto

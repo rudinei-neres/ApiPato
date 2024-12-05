@@ -25,7 +25,7 @@ const UsuarioControlador = {
       }
 
       // Geração do token JWT
-      const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '100h' });
+      const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email, papel: usuario.papel }, process.env.JWT_SECRET, { expiresIn: '100h' });
 
       res.status(200).json({ token, usuario });
     } catch (erro) {

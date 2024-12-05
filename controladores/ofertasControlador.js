@@ -1,9 +1,9 @@
+
 import ConexaoMySql from '../utils/bancoDeDados.js';
 
 export const listarOfertas = async (req, res) => {
   try {
-    const connection = await new ConexaoMySql().getConexao();
-    const [ofertas] = await connection.execute('SELECT * FROM ofertas');
+    const [ofertas] = await ConexaoMySql.execute('SELECT * FROM ofertas');
 
     if (ofertas.length === 0) {
       return res.status(404).json({ mensagem: 'Nenhuma oferta encontrada.' });
@@ -20,8 +20,7 @@ export const obterOferta = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const connection = await new ConexaoMySql().getConexao();
-    const [oferta] = await connection.execute(
+    const [oferta] = await ConexaoMySql.execute(
       'SELECT * FROM ofertas WHERE id_oferta = ?',
       [id]
     );
@@ -45,8 +44,7 @@ export const criarOferta = async (req, res) => {
   }
 
   try {
-    const connection = await new ConexaoMySql().getConexao();
-    await connection.execute(
+    await ConexaoMySql.execute(
       'INSERT INTO ofertas (titulo, descricao, preco, validade) VALUES (?, ?, ?, ?)',
       [titulo, descricao, preco, validade]
     );
@@ -62,8 +60,7 @@ export const deletarOferta = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const connection = await new ConexaoMySql().getConexao();
-    const [resultado] = await connection.execute(
+    const [resultado] = await ConexaoMySql.execute(
       'DELETE FROM ofertas WHERE id_oferta = ?',
       [id]
     );
