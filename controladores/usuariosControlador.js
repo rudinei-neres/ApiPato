@@ -101,7 +101,7 @@ const UsuarioControlador = {
       next(erro);
     }
   },
-  async  inicialSaldo(req, res, next) {
+  async inicialSaldo(req, res, next) {
     try {
       const { email, saldo } = req.body;
       await UsuarioServico.inicialSaldo(email, saldo);

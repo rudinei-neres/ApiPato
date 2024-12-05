@@ -38,7 +38,7 @@ const UsuarioServico = {
     return { mensagem: 'Saldo atualizado com sucesso.' };
   },
   
-  async iniSaldo(email) {
+  async inicialSaldo(email) {
     const [resultado] = await ConexaoMySql.execute(
       "SELECT carteira FROM usuarios WHERE email = ?",
       [email]
