@@ -9,7 +9,7 @@ router.post('/login', UsuarioControlador.login);// Certifique-se de que as funç
 
 
 router.put('/atualizar', UsuarioControlador.atualizarUsuario);
-router.get('/perfil', UsuarioControlador.obterUsuario); // Ajuste conforme o método do controlador
+router.get('/perfil', UsuarioControlador.buscarUsuarioLogado); // Ajuste conforme o método do controlador
 
 
 

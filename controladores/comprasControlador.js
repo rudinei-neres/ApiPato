@@ -1,48 +1,10 @@
 import ConexaoMySql from '../utils/bancoDeDados.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
-// Buscar usuário logado
-export const buscarUsuarioLogado = async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ error: "Token não fornecido." });
-    }
 
-    const token = authHeader.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: "Token inválido." });
-    }
 
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return res.status(403).json({
-        error: err.name === 'TokenExpiredError' ? 'Token expirado.' : 'Token inválido.'
-      });
-    }
 
-    const connection = await new ConexaoMySql().getConexao();
-    const [resultado] = await connection.execute(
-      "SELECT nome, email, papel FROM usuarios WHERE id_usuario = ?",
-      [decoded.id_usuario]
-    );
 
-    if (!resultado.length) {
-      console.warn(`Token válido, mas usuário ${decoded.id_usuario} não encontrado.`);
-      return res.status(404).json({ error: "Usuário não encontrado." });
-    }
-
-    res.status(200).json(resultado[0]);
-  } catch (error) {
-    console.error("Erro ao buscar usuário logado:", error);
-    res.status(500).json({ error: "Erro ao buscar usuário logado." });
-  }
-};
-
-// Adicionar novo usuário
 export const adicionar = async (req, res) => {
   const { nome, email, senha, telefone, carteira } = req.body;
 
