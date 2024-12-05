@@ -90,27 +90,46 @@ const UsuarioControlador = {
     }
   },
 
-  // Método para atualizar o saldo do usuário
-  async atualizarSaldo(req, res, next) {
-    try {
-      const { email, saldo } = req.body;
-      await UsuarioServico.atualizarSaldo(email, saldo);
-      res.status(200).json({ mensagem: 'Saldo atualizado com sucesso' });
-    } catch (erro) {
-      console.error('Erro ao atualizar saldo:', erro.message);
-      next(erro);
+ // Método para atualizar o saldo do usuário
+async atualizarSaldo(req, res, next) {
+  try {
+    const { email, saldo } = req.body;
+
+    // Verifique se o email e o saldo estão presentes
+    if (!email || typeof saldo === 'undefined') {
+      return res.status(400).json({ mensagem: 'Email e saldo são obrigatórios.' });
     }
-  },
-  async inicialSaldo(req, res, next) {
-    try {
-      const { email, saldo } = req.body;
-      await UsuarioServico.inicialSaldo(email, saldo);
-      res.status(200).json({ mensagem: 'Saldo atualizado com sucesso' });
-    } catch (erro) {
-      console.error('Erro ao atualizar saldo:', erro.message);
-      next(erro);
+
+    await UsuarioServico.atualizarSaldo(email, saldo);
+    res.status(200).json({ mensagem: 'Saldo atualizado com sucesso.' });
+  } catch (erro) {
+    console.error('Erro ao atualizar saldo:', erro.message);
+    next(erro);
+  }
+},
+
+// Método para obter o saldo inicial do usuário
+async inicialSaldo(req, res, next) {
+  try {
+    const { email } = req.body;
+
+    // Verifique se o email está presente
+    if (!email) {
+      return res.status(400).json({ mensagem: 'Email é obrigatório.' });
     }
-  },
+
+    const saldo = await UsuarioServico.obterSaldo(email);
+
+    if (saldo === null) {
+      return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+    }
+
+    res.status(200).json({ saldo });
+  } catch (erro) {
+    console.error('Erro ao obter saldo:', erro.message);
+    next(erro);
+  }
+},
 
 
 

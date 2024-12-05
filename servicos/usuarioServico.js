@@ -22,12 +22,8 @@ const UsuarioServico = {
 
   // Atualiza o saldo do usuário
   async atualizarSaldo(email, novoSaldo) {
-    if (typeof email === 'undefined' || email === null) {
-      throw new Error("O campo 'email' é obrigatório e não pode ser 'undefined' ou 'null'.");
-    }
-  
-    if (typeof novoSaldo === 'undefined' || novoSaldo === null) {
-      throw new Error("O campo 'novoSaldo' é obrigatório e não pode ser 'undefined' ou 'null'.");
+    if (!email || typeof novoSaldo === 'undefined') {
+      throw new Error("Os campos 'email' e 'novoSaldo' são obrigatórios e não podem ser 'undefined' ou 'null'.");
     }
   
     await ConexaoMySql.execute(
@@ -38,13 +34,19 @@ const UsuarioServico = {
     return { mensagem: 'Saldo atualizado com sucesso.' };
   },
   
-  async inicialSaldo(email) {
+  async obterSaldo(email) {
+    if (!email) {
+      throw new Error("O campo 'email' é obrigatório e não pode ser 'undefined' ou 'null'.");
+    }
+  
     const [resultado] = await ConexaoMySql.execute(
       "SELECT carteira FROM usuarios WHERE email = ?",
       [email]
     );
+  
     return resultado[0] ? resultado[0].carteira : null;
   },
+  
   
 
   // Deleta um usuário pelo ID
