@@ -25,7 +25,7 @@ const UsuarioControlador = {
       }
 
       // Geração do token JWT
-      const token = jwt.sign({ id: usuario.id_usuario }, process.env.JWT_SECRET, { expiresIn: '100h' });
+      const token = jwt.sign({ id: usuario.id_usuario, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '100h' });
 
       res.status(200).json({ token, usuario });
     } catch (erro) {
@@ -109,9 +109,10 @@ async atualizarSaldo(req, res, next) {
 },
 
 // Método para obter o saldo inicial do usuário
+// Método para obter o saldo inicial do usuário
 async inicialSaldo(req, res, next) {
   try {
-    const { email } = req.body;
+    const { email } = req.query;
 
     // Verifique se o email está presente
     if (!email) {
@@ -130,6 +131,8 @@ async inicialSaldo(req, res, next) {
     next(erro);
   }
 },
+
+
 
 
 
