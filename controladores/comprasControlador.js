@@ -68,7 +68,6 @@ export const buscarCompras = async (req, res) => {
 };
 
 export default {
-  buscarUsuarioLogado,
   adicionar,
   buscarCompras,
 };
