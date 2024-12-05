@@ -54,10 +54,18 @@ async obterSaldoPorId(id) {
   // Cria um novo usuário
   async criarUsuario({ nome, email, telefone, senha }) {
     console.log('Criando usuário no banco:', { nome, email, telefone });
-    const query = 'INSERT INTO usuarios (nome, email, telefone, senha) VALUES (?, ?, ?, ?)';
-    await ConexaoMySql.execute(query, [nome, email, telefone, senha]);
+    
+    // Modificando a consulta para incluir o valor inicial da carteira
+    const query = 'INSERT INTO usuarios (nome, email, telefone, senha, carteira) VALUES (?, ?, ?, ?, ?)';
+    const saldoInicial = 500; // Definindo o saldo inicial da carteira
+  
+    // Executando a consulta com o saldo inicial incluído
+    await ConexaoMySql.execute(query, [nome, email, telefone, senha, saldoInicial]);
+  
     return { mensagem: 'Usuário criado com sucesso.' };
-  },
+  }
+  
+  
 };
 
 export default UsuarioServico; // Usando export default para exportar o serviço
