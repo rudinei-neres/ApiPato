@@ -37,6 +37,15 @@ const UsuarioServico = {
   
     return { mensagem: 'Saldo atualizado com sucesso.' };
   },
+  
+  async iniSaldo(email) {
+    const [resultado] = await ConexaoMySql.execute(
+      "SELECT carteira FROM usuarios WHERE email = ?",
+      [email]
+    );
+    return resultado[0] ? resultado[0].carteira : null;
+  },
+  
 
   // Deleta um usuário pelo ID
   async deletarUsuario(id) {
