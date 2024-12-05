@@ -1,10 +1,18 @@
 import express from 'express';
-const ofertasRotas = express.Router();
 import OfertasControlador from '../controladores/ofertasControlador.js';
 
-// Defina suas rotas
-router.get('/', OfertasControlador.listarOfertas);
-router.get('/:id', OfertasControlador.obterOferta);
+const ofertasRotas = express.Router();
 
-// Exporte o router com export default
+// Rota para listar todas as ofertas
+ofertasRotas.get('/', OfertasControlador.listarOfertas);
+
+// Rota para obter uma oferta específica por ID
+ofertasRotas.get('/:id', OfertasControlador.obterOferta);
+
+// Rota para criar uma nova oferta
+ofertasRotas.post('/', OfertasControlador.criarOferta);
+
+// Rota para deletar uma oferta por ID
+ofertasRotas.delete('/:id', OfertasControlador.deletarOferta);
+
 export default ofertasRotas;
