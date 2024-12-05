@@ -1,7 +1,11 @@
 import express from 'express';
 import OfertasControlador from '../controladores/ofertasControlador.js';
+import autenticacaoMiddleware from '../middlewares/autenticacaoMiddleware.js'; // Certifique-se de que o caminho está correto
 
 const ofertasRotas = express.Router();
+
+// Aplicar o middleware de autenticação a todas as rotas de ofertas
+ofertasRotas.use(autenticacaoMiddleware);
 
 // Rota para listar todas as ofertas
 ofertasRotas.get('/', OfertasControlador.listarOfertas);

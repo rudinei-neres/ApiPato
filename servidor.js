@@ -4,7 +4,6 @@ import usuariosRotas from './rotas/usuariosRotas.js';
 import comprasRotas from './rotas/comprasRotas.js';
 import ofertasRotas from './rotas/ofertasRotas.js';
 import errorHandler from './middlewares/errorHandler.js';
-import autenticacaoMiddleware from './middlewares/autenticacaoMiddleware.js';
 
 import dotenv from 'dotenv';
 
@@ -22,12 +21,12 @@ app.use(express.json());
 
 // Rotas abertas (sem autenticação)
 app.use('/api/usuarios', usuariosRotas);
-app.use('/api/compras', comprasRotas);
-app.use('/api/ofertas', ofertasRotas);
+
 
 // Middleware de autenticação
-app.use(autenticacaoMiddleware); // Aplica o middleware de autenticação para rotas protegidas
 
+app.use('/api/ofertas', ofertasRotas);
+app.use('/api/compras', comprasRotas);
 // Logs de requisições
 app.use((req, res, next) => {
   console.log(`[LOG] Rota acessada: ${req.path}, Método: ${req.method}`);

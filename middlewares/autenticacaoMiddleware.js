@@ -16,6 +16,7 @@ const autenticacaoMiddleware = (req, res, next) => {
   // Pega o token do cabeçalho Authorization
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Exemplo: "Bearer <token>"
+  console.log(`[Autenticação] Cabeçalhos recebidos:`, req.headers);
 
   if (!token) {
     console.log(`[Autenticação] Falha: Token não fornecido na rota ${req.path}`);
