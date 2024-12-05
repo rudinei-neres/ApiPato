@@ -41,20 +41,23 @@ const UsuarioControlador = {
         console.warn('Token inválido ou não fornecido.');
         return res.status(401).json({ mensagem: 'Token inválido ou não fornecido.' });
       }
+  
       const { id } = req.usuario;
       if (!id) {
         console.warn('Token inválido ou não fornecido.');
         return res.status(401).json({ mensagem: 'Token inválido ou não fornecido.' });
-      } // Pega o ID do usuário do token decodificado
-
+      }
+  
+      // Busca o usuário pelo ID
       const usuario = await UsuarioServico.obterUsuarioPorId(id);
-
+  
       if (!usuario) {
         console.warn(`Token válido, mas usuário ${id} não encontrado.`);
         return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
       }
-
-      res.status(200).json({ usuario });
+  
+      // Retorna o objeto do usuário diretamente
+      res.status(200).json(usuario);
     } catch (error) {
       console.error('Erro ao buscar usuário logado:', error);
       res.status(500).json({ mensagem: 'Erro ao buscar usuário logado.' });
