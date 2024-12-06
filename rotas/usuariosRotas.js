@@ -19,6 +19,6 @@ router.get('/saldo', UsuarioControlador.inicialSaldo);
 router.get('/:id', UsuarioControlador.obterUsuarioPorId);
 router.delete('/:id', UsuarioControlador.deletarUsuario);
 router.get('/', UsuarioControlador.listarusUarios);
-
+router.put('/api/usuarios/:id_usuario', UsuarioControlador.atualizarUsuario);
 console.log('Rotas de usuários registradas.');
 export default router;
