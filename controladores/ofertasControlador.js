@@ -36,16 +36,16 @@ export const obterOferta = async (req, res) => {
 };
 
 export const criarOferta = async (req, res) => {
-  const { imagen_url, valor, quantidade } = req.body;
+  const { imagem_url, quantidade, valor } = req.body;
 
-  if ( !imagen_url || !valor || !quantidade) {
+  if (!imagem_url || !quantidade || !valor) {
     return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
   }
 
   try {
     await ConexaoMySql.execute(
-      'INSERT INTO ofertas (imagen_url, valor, quantidade) VALUES (?, ?, ?, ?)',
-      [imagen_url, valor, quantidade]
+      'INSERT INTO ofertas (imagem_url, quantidade, valor) VALUES (?, ?, ?)',
+      [imagem_url, quantidade, valor]
     );
 
     res.status(201).json({ mensagem: 'Oferta criada com sucesso!' });
@@ -54,6 +54,7 @@ export const criarOferta = async (req, res) => {
     res.status(500).json({ mensagem: 'Erro ao criar oferta.' });
   }
 };
+
 
 export const atualizarOferta = async (req, res) => {
   const { id } = req.params;
