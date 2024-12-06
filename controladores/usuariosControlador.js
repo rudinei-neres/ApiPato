@@ -1,6 +1,7 @@
 import UsuarioServico from '../servicos/usuarioServico.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import ConexaoMySql from '../utils/bancoDeDados.js';
 
 const UsuarioControlador = {
   // Método para login do usuário
