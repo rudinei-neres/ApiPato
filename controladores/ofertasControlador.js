@@ -66,9 +66,17 @@ export const atualizarOferta = async (req, res) => {
   }
 
   try {
+    // Certifique-se de que os tipos dos valores estão corretos
+    const quantidadeNumero = parseInt(quantidade, 10);
+    const valorNumero = parseFloat(valor);
+
+    if (isNaN(quantidadeNumero) || isNaN(valorNumero)) {
+      return res.status(400).json({ mensagem: 'Quantidade e valor devem ser números.' });
+    }
+
     const [resultado] = await ConexaoMySql.execute(
       'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
-      [imagem_url, quantidade, valor, id_oferta]
+      [imagem_url, quantidadeNumero, valorNumero, id_oferta]
     );
 
     if (resultado.affectedRows === 0) {
