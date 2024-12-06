@@ -57,11 +57,10 @@ export const criarOferta = async (req, res) => {
 
 
 export const atualizarOferta = async (req, res) => {
-   
   const { imagem_url, quantidade, valor, id_oferta } = req.body;
 
   // Verifique se os campos necessários estão presentes
-  if (!id_oferta || !imagem_url || typeof quantidade === 'undefined' || typeof valor === 'undefined') {
+  if (!id_oferta || !imagem_url || quantidade === undefined || valor === undefined) {
     return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
   }
 
