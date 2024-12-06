@@ -182,9 +182,30 @@ async inicialSaldo(req, res, next) {
       console.error('Erro ao listar usuários:', error);
       res.status(500).json({ mensagem: 'Erro ao listar usuários.' });
     }
+  },
+  
+  async  atualizarSaldoUsuarioPorId(req, res) {
+    const { id_usuario } = req.params;
+    const { carteira } = req.body;
+  
+    try {
+      const [resultado] = await ConexaoMySql.execute(
+        'UPDATE usuarios SET carteira = ? WHERE id_usuario = ?',
+        [carteira, id_usuario]
+      );
+  
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+      }
+  
+      res.status(200).json({ mensagem: 'Usuário atualizado com sucesso.' });
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      res.status(500).json({ mensagem: 'Erro ao atualizar usuário.' });
+    }
   }
   
-
+  
 
 
 
