@@ -184,11 +184,21 @@ async inicialSaldo(req, res, next) {
     }
   },
   
-  async  atualizarSaldoUsuarioPorId(req, res) {
-    const { id_usuario } = req.body;
-    const { carteira } = req.body;
+  async atualizarSaldoUsuarioPorId(req, res) {
+    const { id_usuario, carteira } = req.body;
+  
+    // Verifique se os parâmetros necessários estão presentes
+    if (!id_usuario) {
+      return res.status(400).json({ mensagem: 'ID do usuário é obrigatório.' });
+    }
+  
+    if (typeof carteira === 'undefined') {
+      return res.status(400).json({ mensagem: 'Valor da carteira é obrigatório.' });
+    }
   
     try {
+      console.log(`Atualizando saldo do usuário ID: ${id_usuario} para valor: ${carteira}`);
+  
       const [resultado] = await ConexaoMySql.execute(
         'UPDATE usuarios SET carteira = ? WHERE id_usuario = ?',
         [carteira, id_usuario]
@@ -200,10 +210,17 @@ async inicialSaldo(req, res, next) {
   
       res.status(200).json({ mensagem: 'Usuário atualizado com sucesso.' });
     } catch (error) {
-      console.error('Erro ao atualizar usuário:', error);
+      console.error('Erro ao atualizar usuário:', {
+        message: error.message,
+        stack: error.stack,
+        sql: error.sql,
+        sqlMessage: error.sqlMessage,
+      });
+  
       res.status(500).json({ mensagem: 'Erro ao atualizar usuário.' });
     }
   }
+  
   
   
 
