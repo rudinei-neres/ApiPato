@@ -23,3 +23,4 @@ ofertasRotas.patch('/editar', OfertasControlador.atualizarOferta);
 ofertasRotas.delete('/:id', OfertasControlador.deletarOferta);
 
 export default ofertasRotas;
+
