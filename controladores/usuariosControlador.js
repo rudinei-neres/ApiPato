@@ -169,21 +169,21 @@ async inicialSaldo(req, res, next) {
       next(erro);
     }
   },
- async  listarusUarios (req, res) {
+  async listarusUarios(req, res) {
     try {
       const [usuarios] = await ConexaoMySql.execute('SELECT * FROM usuarios');
   
-      if (ofertas.length === 0) {
-        return res.status(404).json({ mensagem: 'Nenhuma usuario encontrada.' });
+      if (usuarios.length === 0) {
+        return res.status(404).json({ mensagem: 'Nenhum usuário encontrado.' });
       }
   
       res.status(200).json(usuarios);
     } catch (error) {
-      console.error('Erro ao listar usuarios:', error);
-      res.status(500).json({ mensagem: 'Erro ao listar usuarios.' });
+      console.error('Erro ao listar usuários:', error);
+      res.status(500).json({ mensagem: 'Erro ao listar usuários.' });
     }
-  
   }
+  
 
 
 

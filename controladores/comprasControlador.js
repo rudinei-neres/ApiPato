@@ -108,7 +108,7 @@ const ComprasControlador = {
     try {
       const [compras] = await ConexaoMySql.execute('SELECT * FROM compras');
   
-      if (ofertas.length === 0) {
+      if (compras.length === 0) {
         return res.status(404).json({ mensagem: 'Nenhuma compras encontrada.' });
       }
   
