@@ -102,7 +102,26 @@ const ComprasControlador = {
       console.error('Erro ao deletar compra:', error);
       res.status(500).json({ mensagem: 'Erro ao deletar compra.' });
     }
+  },
+
+  async  listarusCompras (req, res) {
+    try {
+      const [compras] = await ConexaoMySql.execute('SELECT * FROM compras');
+  
+      if (ofertas.length === 0) {
+        return res.status(404).json({ mensagem: 'Nenhuma compras encontrada.' });
+      }
+  
+      res.status(200).json(ofertas);
+    } catch (error) {
+      console.error('Erro ao listar compras:', error);
+      res.status(500).json({ mensagem: 'Erro ao listar compras.' });
+    }
+  
   }
+
+
+
 };
 
 export default ComprasControlador;

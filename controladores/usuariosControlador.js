@@ -167,7 +167,28 @@ async inicialSaldo(req, res, next) {
       console.error('Erro ao atualizar usuário:', erro.message);
       next(erro);
     }
+  },
+ async  listarusUarios (req, res) {
+    try {
+      const [usuarios] = await ConexaoMySql.execute('SELECT * FROM usuarios');
+  
+      if (ofertas.length === 0) {
+        return res.status(404).json({ mensagem: 'Nenhuma usuario encontrada.' });
+      }
+  
+      res.status(200).json(ofertas);
+    } catch (error) {
+      console.error('Erro ao listar usuarios:', error);
+      res.status(500).json({ mensagem: 'Erro ao listar usuarios.' });
+    }
+  
   }
+
+
+
+
+
+
 };
 
 export default UsuarioControlador;
