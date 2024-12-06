@@ -14,10 +14,10 @@ ofertasRotas.get('/', OfertasControlador.listarOfertas);
 ofertasRotas.get('/:id', OfertasControlador.obterOferta);
 
 // Rota para criar uma nova oferta
-ofertasRotas.post('/', OfertasControlador.criarOferta);
+ofertasRotas.post('/criar', OfertasControlador.criarOferta);
 
 // Rota para atualizar uma oferta por ID
-ofertasRotas.patch('/:id', OfertasControlador.atualizarOferta);
+ofertasRotas.patch('/editar', OfertasControlador.atualizarOferta);
 
 // Rota para deletar uma oferta por ID
 ofertasRotas.delete('/:id', OfertasControlador.deletarOferta);
