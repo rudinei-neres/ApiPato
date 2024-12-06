@@ -14,7 +14,7 @@ const PORTA = 5000;
 
 app.use(cors({
   origin: '*', // Permite requisições de qualquer origem
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
