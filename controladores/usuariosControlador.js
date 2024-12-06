@@ -185,7 +185,7 @@ async inicialSaldo(req, res, next) {
   },
   
   async  atualizarSaldoUsuarioPorId(req, res) {
-    const { id_usuario } = req.params;
+    const { id_usuario } = req.body;
     const { carteira } = req.body;
   
     try {
