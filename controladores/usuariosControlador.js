@@ -177,7 +177,7 @@ async inicialSaldo(req, res, next) {
         return res.status(404).json({ mensagem: 'Nenhuma usuario encontrada.' });
       }
   
-      res.status(200).json(ofertas);
+      res.status(200).json(usuarios);
     } catch (error) {
       console.error('Erro ao listar usuarios:', error);
       res.status(500).json({ mensagem: 'Erro ao listar usuarios.' });

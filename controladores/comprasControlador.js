@@ -112,7 +112,7 @@ const ComprasControlador = {
         return res.status(404).json({ mensagem: 'Nenhuma compras encontrada.' });
       }
   
-      res.status(200).json(ofertas);
+      res.status(200).json(compras);
     } catch (error) {
       console.error('Erro ao listar compras:', error);
       res.status(500).json({ mensagem: 'Erro ao listar compras.' });
