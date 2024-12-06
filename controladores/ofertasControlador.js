@@ -57,21 +57,31 @@ export const criarOferta = async (req, res) => {
 
 
 export const atualizarOferta = async (req, res) => {
-  const { id } = req.params;
-  const { titulo, descricao, preco, validade } = req.body;
+  const { id_oferta } = req.params;
+  const { imagem_url, quantidade, valor } = req.body;
+
+  // Verifique se os campos necessários estão presentes
+  if (!id_oferta || !imagem_url || typeof quantidade === 'undefined' || typeof valor === 'undefined') {
+    return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
+  }
 
   try {
-    await ConexaoMySql.execute(
-      'UPDATE ofertas SET titulo = ?, descricao = ?, preco = ?, validade = ? WHERE id_oferta = ?',
-      [titulo, descricao, preco, validade, id]
+    const [resultado] = await ConexaoMySql.execute(
+      'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
+      [imagem_url, quantidade, valor, id_oferta]
     );
 
-    res.status(200).json({ mensagem: 'Oferta atualizada com sucesso!' });
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ mensagem: 'Oferta não encontrada.' });
+    }
+
+    res.status(200).json({ mensagem: 'Oferta atualizada com sucesso.' });
   } catch (error) {
     console.error('Erro ao atualizar oferta:', error);
     res.status(500).json({ mensagem: 'Erro ao atualizar oferta.' });
   }
 };
+
 
 export const deletarOferta = async (req, res) => {
   const { id } = req.params;
