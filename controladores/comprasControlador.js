@@ -42,6 +42,66 @@ const ComprasControlador = {
       console.error("Erro ao adicionar compra:", error);
       res.status(500).json({ error: "Erro ao adicionar compra." });
     }
+  },
+
+  // Método para obter uma compra por ID
+  async obterCompra(req, res) {
+    const { id } = req.params;
+
+    try {
+      const [compra] = await ConexaoMySql.execute(
+        "SELECT * FROM compras WHERE id_compra = ?",
+        [id]
+      );
+
+      if (compra.length === 0) {
+        return res.status(404).json({ mensagem: 'Compra não encontrada.' });
+      }
+
+      res.status(200).json(compra[0]);
+    } catch (error) {
+      console.error('Erro ao obter compra:', error);
+      res.status(500).json({ mensagem: 'Erro ao obter compra.' });
+    }
+  },
+
+  // Método para atualizar uma compra por ID
+  async atualizarCompra(req, res) {
+    const { id } = req.params;
+    const { usuario_id, oferta_id } = req.body;
+
+    try {
+      await ConexaoMySql.execute(
+        "UPDATE compras SET usuario_id = ?, oferta_id = ? WHERE id_compra = ?",
+        [usuario_id, oferta_id, id]
+      );
+
+      res.status(200).json({ mensagem: 'Compra atualizada com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao atualizar compra:', error);
+      res.status(500).json({ mensagem: 'Erro ao atualizar compra.' });
+    }
+  },
+
+  // Método para deletar uma compra por ID
+  async deletarCompra(req, res) {
+    const { id } = req.params;
+
+    try {
+      const [resultado] = await ConexaoMySql.execute(
+        "DELETE FROM compras WHERE id_compra = ?",
+        [id]
+      );
+
+      if (resultado.affectedRows === 0) {
+        return res.status(404).json({ mensagem: 'Compra não encontrada.' });
+      }
+
+      res.status(200).json({ mensagem: 'Compra deletada com sucesso.' });
+    } catch (error) {
+      console.error('Erro ao deletar compra:', error);
+      res.status(500).json({ mensagem: 'Erro ao deletar compra.' });
+    }
   }
 };
 

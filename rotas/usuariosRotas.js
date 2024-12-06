@@ -16,7 +16,8 @@ router.put('/atualizar', UsuarioControlador.atualizarUsuario);
 router.get('/perfil', UsuarioControlador.buscarUsuarioLogado);
 router.put('/saldo', UsuarioControlador.atualizarSaldo);
 router.get('/saldo', UsuarioControlador.inicialSaldo);
-
+router.get('/:id', UsuarioControlador.obterUsuarioPorId);
+router.delete('/:id', UsuarioControlador.deletarUsuario);
 
 console.log('Rotas de usuários registradas.');
 export default router;

@@ -128,9 +128,22 @@ async inicialSaldo(req, res, next) {
   }
 },
 
+  // Método para obter um usuário por ID
+  async obterUsuarioPorId(req, res, next) {
+    try {
+      const { id } = req.params;
+      const usuario = await UsuarioServico.obterUsuarioPorId(id);
 
+      if (!usuario) {
+        return res.status(404).json({ mensagem: 'Usuário não encontrado.' });
+      }
 
-
+      res.status(200).json(usuario);
+    } catch (erro) {
+      console.error('Erro ao obter usuário por ID:', erro.message);
+      next(erro);
+    }
+  },
 
   // Método para deletar um usuário
   async deletarUsuario(req, res, next) {
@@ -158,7 +171,6 @@ async inicialSaldo(req, res, next) {
 };
 
 export default UsuarioControlador;
-
 
 
 

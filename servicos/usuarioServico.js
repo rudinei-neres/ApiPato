@@ -1,4 +1,3 @@
-
 import ConexaoMySql from '../utils/bancoDeDados.js'; // Certifique-se de que o caminho e o nome estão corretos
 
 const UsuarioServico = {
@@ -39,9 +38,6 @@ async obterSaldoPorId(id) {
   return result.length ? result[0].carteira : null;
 },
 
-  
-  
-
   // Deleta um usuário pelo ID
   async deletarUsuario(id) {
     await ConexaoMySql.execute(
@@ -64,8 +60,6 @@ async obterSaldoPorId(id) {
   
     return { mensagem: 'Usuário criado com sucesso.' };
   }
-  
-  
 };
 
 export default UsuarioServico; // Usando export default para exportar o serviço

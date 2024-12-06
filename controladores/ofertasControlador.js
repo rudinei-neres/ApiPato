@@ -1,4 +1,3 @@
-
 import ConexaoMySql from '../utils/bancoDeDados.js';
 
 export const listarOfertas = async (req, res) => {
@@ -56,6 +55,23 @@ export const criarOferta = async (req, res) => {
   }
 };
 
+export const atualizarOferta = async (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, preco, validade } = req.body;
+
+  try {
+    await ConexaoMySql.execute(
+      'UPDATE ofertas SET titulo = ?, descricao = ?, preco = ?, validade = ? WHERE id_oferta = ?',
+      [titulo, descricao, preco, validade, id]
+    );
+
+    res.status(200).json({ mensagem: 'Oferta atualizada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar oferta:', error);
+    res.status(500).json({ mensagem: 'Erro ao atualizar oferta.' });
+  }
+};
+
 export const deletarOferta = async (req, res) => {
   const { id } = req.params;
 
@@ -80,5 +96,6 @@ export default {
   listarOfertas,
   obterOferta,
   criarOferta,
+  atualizarOferta,
   deletarOferta,
 };
