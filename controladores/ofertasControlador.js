@@ -73,6 +73,11 @@ export const atualizarOferta = async (req, res) => {
       return res.status(400).json({ mensagem: 'Quantidade e valor devem ser números.' });
     }
 
+    // Certifique-se de que os valores não são negativos
+    if (quantidadeNumero <= 0 || valorNumero <= 0) {
+      return res.status(400).json({ mensagem: 'Quantidade e valor devem ser maiores que zero.' });
+    }
+
     const [resultado] = await ConexaoMySql.execute(
       'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
       [imagem_url, quantidadeNumero, valorNumero, id_oferta]
@@ -88,6 +93,7 @@ export const atualizarOferta = async (req, res) => {
     res.status(500).json({ mensagem: 'Erro ao atualizar oferta.' });
   }
 };
+
 
 
 
