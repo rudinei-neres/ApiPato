@@ -68,7 +68,7 @@ export const atualizarOferta = async (req, res) => {
   try {
     const [resultado] = await ConexaoMySql.execute(
       'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
-      [id_oferta, imagem_url, quantidade, valor ]
+      [imagem_url, quantidade, valor, id_oferta]
     );
 
     if (resultado.affectedRows === 0) {
@@ -81,6 +81,7 @@ export const atualizarOferta = async (req, res) => {
     res.status(500).json({ mensagem: 'Erro ao atualizar oferta.' });
   }
 };
+
 
 
 export const deletarOferta = async (req, res) => {
