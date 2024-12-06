@@ -56,32 +56,47 @@ export const criarOferta = async (req, res) => {
 };
 
 
+// Ajuste no backend para permitir edição parcial com PATCH
 export const atualizarOferta = async (req, res) => {
-  const { imagem_url, quantidade, valor, id_oferta } = req.body;
+  const { id_oferta, imagem_url, quantidade, valor } = req.body;
 
-  // Verifique se os campos necessários estão presentes
-  if (!id_oferta || !imagem_url || quantidade === undefined || valor === undefined) {
-    return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
+  if (!id_oferta) {
+    return res.status(400).json({ mensagem: 'ID da oferta é obrigatório.' });
   }
 
   try {
-    // Certifique-se de que os tipos dos valores estão corretos
-    const quantidadeNumero = parseInt(quantidade, 10);
-    const valorNumero = parseFloat(valor);
+    const updateFields = [];
+    const updateValues = [];
 
-    if (isNaN(quantidadeNumero) || isNaN(valorNumero)) {
-      return res.status(400).json({ mensagem: 'Quantidade e valor devem ser números.' });
+    if (imagem_url) {
+      updateFields.push('imagem_url = ?');
+      updateValues.push(imagem_url);
+    }
+    if (quantidade !== undefined) {
+      const quantidadeNumero = parseInt(quantidade, 10);
+      if (isNaN(quantidadeNumero) || quantidadeNumero <= 0) {
+        return res.status(400).json({ mensagem: 'Quantidade deve ser um número maior que zero.' });
+      }
+      updateFields.push('quantidade = ?');
+      updateValues.push(quantidadeNumero);
+    }
+    if (valor !== undefined) {
+      const valorNumero = parseFloat(valor);
+      if (isNaN(valorNumero) || valorNumero <= 0) {
+        return res.status(400).json({ mensagem: 'Valor deve ser um número maior que zero.' });
+      }
+      updateFields.push('valor = ?');
+      updateValues.push(valorNumero);
     }
 
-    // Certifique-se de que os valores não são negativos
-    if (quantidadeNumero <= 0 || valorNumero <= 0) {
-      return res.status(400).json({ mensagem: 'Quantidade e valor devem ser maiores que zero.' });
+    updateValues.push(id_oferta);
+
+    if (updateFields.length === 0) {
+      return res.status(400).json({ mensagem: 'Nenhum campo para atualizar.' });
     }
 
-    const [resultado] = await ConexaoMySql.execute(
-      'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
-      [imagem_url, quantidadeNumero, valorNumero, id_oferta]
-    );
+    const query = `UPDATE ofertas SET ${updateFields.join(', ')} WHERE id_oferta = ?`;
+    const [resultado] = await ConexaoMySql.execute(query, updateValues);
 
     if (resultado.affectedRows === 0) {
       return res.status(404).json({ mensagem: 'Oferta não encontrada.' });
@@ -93,6 +108,7 @@ export const atualizarOferta = async (req, res) => {
     res.status(500).json({ mensagem: 'Erro ao atualizar oferta.' });
   }
 };
+
 
 
 

@@ -17,7 +17,7 @@ ofertasRotas.get('/:id', OfertasControlador.obterOferta);
 ofertasRotas.post('/', OfertasControlador.criarOferta);
 
 // Rota para atualizar uma oferta por ID
-ofertasRotas.put('/:id', OfertasControlador.atualizarOferta);
+ofertasRotas.patch('/:id', OfertasControlador.atualizarOferta);
 
 // Rota para deletar uma oferta por ID
 ofertasRotas.delete('/:id', OfertasControlador.deletarOferta);
