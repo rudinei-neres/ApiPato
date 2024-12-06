@@ -68,7 +68,7 @@ export const atualizarOferta = async (req, res) => {
   try {
     const [resultado] = await ConexaoMySql.execute(
       'UPDATE ofertas SET imagem_url = ?, quantidade = ?, valor = ? WHERE id_oferta = ?',
-      [imagem_url, quantidade, valor, id_oferta]
+      [id_oferta, imagem_url, quantidade, valor ]
     );
 
     if (resultado.affectedRows === 0) {
