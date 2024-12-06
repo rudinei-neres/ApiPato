@@ -36,16 +36,16 @@ export const obterOferta = async (req, res) => {
 };
 
 export const criarOferta = async (req, res) => {
-  const { titulo, descricao, preco, validade } = req.body;
+  const { imagen_url, valor, quantidade } = req.body;
 
-  if (!titulo || !descricao || !preco || !validade) {
+  if ( !imagen_url || !valor || !quantidade) {
     return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios.' });
   }
 
   try {
     await ConexaoMySql.execute(
-      'INSERT INTO ofertas (titulo, descricao, preco, validade) VALUES (?, ?, ?, ?)',
-      [titulo, descricao, preco, validade]
+      'INSERT INTO ofertas (imagen_url, valor, quantidade) VALUES (?, ?, ?, ?)',
+      [imagen_url, valor, quantidade]
     );
 
     res.status(201).json({ mensagem: 'Oferta criada com sucesso!' });
